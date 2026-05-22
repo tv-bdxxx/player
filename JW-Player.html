@@ -94,15 +94,23 @@
 
 <script>
     const urlParams = new URLSearchParams(window.location.search);
-    const streamSource = urlParams.get('url');
+    let streamSource = urlParams.get('url');
+    const token = urlParams.get('token');
 
     if (streamSource) {
+        // যদি ইউআরএল-এ আলাদাভাবে টোকেন পাঠানো হয়, তবে সেটি মূল লিঙ্কের সাথে যুক্ত করবে
+        if (token) {
+            // চেক করা হচ্ছে লিঙ্কে আগে থেকে কোনো প্যারামিটার (যেমন ?) আছে কিনা
+            const separator = streamSource.includes('?') ? '&' : '?';
+            streamSource = `${streamSource}${separator}token=${token}`;
+        }
+
         const player = jwplayer("player").setup({
             playlist: [{ file: streamSource, type: "hls" }],
             width: "100%",
             height: "100%",
             autostart: true,
-            stretching: "fill", // এখানে 'exactfit' এর বদলে 'fill' দেওয়া হয়েছে
+            stretching: "fill", 
             skin: { name: "glow" },
             displaytitle: false
         });
