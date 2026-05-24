@@ -31,7 +31,7 @@
             backdrop-filter: none !important; 
         }
 
-        /* --- লোডার ডিজাইন --- */
+        /* --- লোডার ডিজাইন (সাইজ ছোট করা হয়েছে) --- */
         #loader {
             position: absolute; top:0; left:0; width:100%; height:100%;
             background: #000; display:flex; justify-content:center; align-items:center;
@@ -40,13 +40,13 @@
 
         .loader-container {
             position: relative; 
-            width: 100px; 
-            height: 100px; 
+            width: 100px; /* ১৫০ থেকে কমিয়ে ১০০ করা হয়েছে */
+            height: 100px; /* ১৫০ থেকে কমিয়ে ১০০ করা হয়েছে */
             display: flex; justify-content: center; align-items: center;
         }
 
         .loader-brand { text-align: center; z-index: 10; }
-        .tv-icon { font-size: 24px; color: #00c3ff; text-shadow: 0 0 10px #00c3ff; } 
+        .tv-icon { font-size: 24px; color: #00c3ff; text-shadow: 0 0 10px #00c3ff; } /* আইকন সাইজ কিছুটা কমানো হয়েছে */
         .brand-name { font-size: 10px; font-weight: 700; color: #fff; text-transform: uppercase; margin-top: 5px; letter-spacing: 1px; }
         .brand-name span { color: #00c3ff; }
 
@@ -72,27 +72,11 @@
         /* এরর মেসেজ */
         .error-content { text-align: center; color: #fff; z-index: 100; }
         .error-content i { font-size: 40px; color: #ff4d4d; margin-bottom: 15px; }
-
-        /* ট্যাপ টু আনমিউট বাটন */
-        #unmute-btn {
-            position: absolute; top: 20px; right: 20px;
-            background: rgba(0, 195, 255, 0.8); color: white;
-            padding: 8px 15px; border-radius: 20px; font-size: 12px;
-            font-weight: bold; z-index: 98; display: none; cursor: pointer;
-            box-shadow: 0 0 10px rgba(0, 195, 255, 0.5);
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
     </style>
 </head>
 <body>
 
 <div id="player-wrapper">
-    <div id="unmute-btn" onclick="unmutePlayer()"><i class="fas fa-volume-up"></i> TAP TO UNMUTE</div>
     <div id="loader">
         <div class="loader-container">
             <div class="neon-ring"></div>
@@ -110,42 +94,32 @@
 <script>
     const urlParams = new URLSearchParams(window.location.search);
     const streamSource = urlParams.get('url');
-    let playerInstance;
 
     if (streamSource) {
-        playerInstance = jwplayer("player").setup({
+        const player = jwplayer("player").setup({
             playlist: [{ file: streamSource, type: "hls" }],
             width: "100%",
             height: "100%",
             autostart: true,
-            mute: false, // ডিফল্ট মিউট ফলস রাখা হলো
             stretching: "exactfit",
             skin: { name: "glow" },
             displaytitle: false
         });
 
-        playerInstance.on("ready", () => {
-            // প্লেয়ার রেডি হলে জোরপূর্বক আনমিউট ও ভলিউম সেট করা
-            playerInstance.setMute(false);
-            playerInstance.setVolume(100);
+        player.on("ready", () => {
+            player.setMute(false);
+            player.setVolume(100);
         });
 
-        playerInstance.on("play", () => {
+        player.on("play", () => {
             document.getElementById("loader").classList.add("hide-now");
-            
-            // প্লে হওয়ার পর যদি ব্রাউজার জোর করে মিউট করে দেয়, তবে স্ক্রিনে একটি সুন্দর আনমিউট বাটন দেখাবে
-            setTimeout(() => {
-                if (playerInstance.getMute()) {
-                    document.getElementById("unmute-btn").style.display = "block";
-                }
-            }, 500);
         });
 
-        playerInstance.on("buffer", () => {
+        player.on("buffer", () => {
             document.getElementById("loader").classList.remove("hide-now");
         });
 
-        playerInstance.on("error", () => {
+        player.on("error", () => {
             const loader = document.getElementById("loader");
             loader.classList.remove("hide-now"); 
             loader.innerHTML = `
@@ -160,22 +134,6 @@
     } else {
         document.getElementById("loader").innerHTML = '<div class="brand-name">No Stream URL Found</div>';
     }
-
-    // বাটন বা স্ক্রিনের যেকোনো জায়গায় ক্লিক করলে ফুল আনমিউট করার ফাংশন
-    function unmutePlayer() {
-        if (playerInstance) {
-            playerInstance.setMute(false);
-            playerInstance.setVolume(100);
-            document.getElementById("unmute-btn").style.display = "none";
-        }
-    }
-
-    // ইউজার প্লেয়ারের বডিতে প্রথম টাচ করলেই যেন সাউন্ড অ্যাক্টিভ হয়ে যায়
-    document.body.addEventListener('click', () => {
-        if (playerInstance && playerInstance.getMute()) {
-            unmutePlayer();
-        }
-    }, { once: true });
 </script>
 
 </body>
