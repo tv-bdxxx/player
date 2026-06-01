@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-    <title>RS Player Pro - Dynamic Fetch</title>
+    <title>RS Player Pro - Compact Loader</title>
 
     <script src="https://content.jwplatform.com/libraries/IDzF9Zmk.js"></script>
     <script>
@@ -23,24 +23,30 @@
         .jw-skin-glow .jw-display-icon-container { 
             background: rgba(255, 255, 255, 0.1) !important; 
             border: 1px solid rgba(255, 255, 255, 0.2); 
+            backdrop-filter: none !important; 
         }
         .jw-skin-glow .jw-button-color { color: #ffffff !important; }
-        .jw-skin-glow .jw-controlbar { background: transparent !important; }
+        .jw-skin-glow .jw-controlbar { 
+            background: transparent !important; 
+            backdrop-filter: none !important; 
+        }
 
-        /* --- প্রিমিয়াম নিয়ন লোডার --- */
+        /* --- লোডার ডিজাইন (সাইজ ছোট করা হয়েছে) --- */
         #loader {
             position: absolute; top:0; left:0; width:100%; height:100%;
             background: #000; display:flex; justify-content:center; align-items:center;
-            z-index:99; flex-direction: column; transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index:99; flex-direction: column; transition: opacity 0.4s ease;
         }
 
         .loader-container {
-            position: relative; width: 100px; height: 100px; 
+            position: relative; 
+            width: 100px; /* ১৫০ থেকে কমিয়ে ১০০ করা হয়েছে */
+            height: 100px; /* ১৫০ থেকে কমিয়ে ১০০ করা হয়েছে */
             display: flex; justify-content: center; align-items: center;
         }
 
         .loader-brand { text-align: center; z-index: 10; }
-        .tv-icon { font-size: 24px; color: #00c3ff; text-shadow: 0 0 10px #00c3ff; } 
+        .tv-icon { font-size: 24px; color: #00c3ff; text-shadow: 0 0 10px #00c3ff; } /* আইকন সাইজ কিছুটা কমানো হয়েছে */
         .brand-name { font-size: 10px; font-weight: 700; color: #fff; text-transform: uppercase; margin-top: 5px; letter-spacing: 1px; }
         .brand-name span { color: #00c3ff; }
 
@@ -54,46 +60,23 @@
 
         @keyframes rotate-vortex { 100% { transform: rotate(360deg); } }
 
-        .loading-text { color: rgba(255, 255, 255, 0.6); font-size: 10px; margin-top: 15px; letter-spacing: 2px; text-transform: uppercase; text-align: center; padding: 0 10px; }
+        .loading-text { color: rgba(255, 255, 255, 0.6); font-size: 10px; margin-top: 15px; letter-spacing: 2px; text-transform: uppercase; }
 
-        .jw-video.jw-reset { object-fit: fill !important; }
+        /* --- ভিডিও সাইড কাটা ফিক্স --- */
+        .jw-video.jw-reset { 
+            object-fit: fill !important; 
+        }
+        
         .hide-now { opacity: 0 !important; visibility: hidden !important; }
 
-        /* --- ওএসডি চ্যানেল ইনফো (চ্যানেল পাল্টালে নাম দেখাবে) --- */
-        #channel-info-box {
-            position: absolute; top: 30px; left: 30px;
-            background: rgba(0, 0, 0, 0.75); border-left: 4px solid #00c3ff;
-            color: #fff; padding: 12px 25px; border-radius: 4px;
-            z-index: 10; font-weight: 600; font-size: 16px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            transition: opacity 0.5s ease; opacity: 0; pointer-events: none;
-        }
-
-        /* --- নেভিগেশন বাটন --- */
-        .tv-nav-btn {
-            position: absolute; top: 50%; transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.6); padding: 15px 20px; font-size: 20px;
-            cursor: pointer; z-index: 10; border-radius: 50%; transition: all 0.3s ease; opacity: 0;
-        }
-        #player-wrapper:hover .tv-nav-btn, .tv-nav-btn:focus {
-            opacity: 1; background: rgba(0, 195, 255, 0.7);
-            box-shadow: 0 0 15px #00c3ff; border-color: #00c3ff; color: #fff; outline: none;
-        }
-        #prev-btn { left: 20px; }
-        #next-btn { right: 20px; }
+        /* এরর মেসেজ */
+        .error-content { text-align: center; color: #fff; z-index: 100; }
+        .error-content i { font-size: 40px; color: #ff4d4d; margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
 <div id="player-wrapper">
-    <!-- ওএসডি নোটিফিকেশন -->
-    <div id="channel-info-box">Loading Channel...</div>
-
-    <!-- নেভিগেশন বাটনসমূহ -->
-    <button id="prev-btn" class="tv-nav-btn" onclick="changeChannel('prev')"><i class="fas fa-chevron-left"></i></button>
-    <button id="next-btn" class="tv-nav-btn" onclick="changeChannel('next')"><i class="fas fa-chevron-right"></i></button>
-
     <div id="loader">
         <div class="loader-container">
             <div class="neon-ring"></div>
@@ -103,7 +86,7 @@
                 <div class="brand-name">RS LIVE <span>TV</span></div>
             </div>
         </div>
-        <div id="loader-status" class="loading-text">CONNECTING SYSTEM...</div>
+        <div class="loading-text">BUFFERING...</div>
     </div>
     <div id="player"></div>
 </div>
@@ -112,165 +95,45 @@
     const urlParams = new URLSearchParams(window.location.search);
     const streamSource = urlParams.get('url');
 
-    let channelList = []; 
-    let currentIdx = 0;
-    let playerInstance = null;
-    let infoTimeout = null;
-
-    // মেইন ইউআরএল ক্লিন করার ফাংশন
-    function cleanUrl(rawUrl) {
-        if (!rawUrl) return "";
-        if (rawUrl.includes("jw-player?url=")) {
-            return decodeURIComponent(rawUrl.split("jw-player?url=")[1]);
-        }
-        return rawUrl;
-    }
-
-    let currentCleanSource = cleanUrl(streamSource);
-
-    // ১. ব্যাকগ্রাউন্ডে index.html থেকে ডায়নামিকালি সব চ্যানেল ডেটা তুলে আনার ম্যাজিক
-    fetch('index.html')
-        .then(response => response.text())
-        .then(html => {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            
-            // index.html এর কার্ড এলিমেন্টগুলো থেকে ডেটা নেওয়া হচ্ছে
-            const channelCards = doc.querySelectorAll('.channel-card');
-            
-            channelCards.forEach(card => {
-                const onclickAttr = card.getAttribute('onclick');
-                const titleEl = card.querySelector('.channel-title');
-                
-                if (onclickAttr && titleEl) {
-                    // ইউআরএল এক্সট্র্যাক্ট করা
-                    const match = onclickAttr.match(/url=([^"']+)/);
-                    if (match && match[1]) {
-                        channelList.push({
-                            name: titleEl.innerText.trim(),
-                            url: cleanUrl(decodeURIComponent(match[1]))
-                        });
-                    }
-                }
-            });
-
-            // বর্তমান চ্যানেলের ইনডেক্স পজিশন ম্যাচ করা
-            if (channelList.length > 0) {
-                currentIdx = channelList.findIndex(ch => ch.url === currentCleanSource);
-                if (currentIdx === -1) currentIdx = 0;
-                
-                // প্লেয়ার লোড করা
-                initPlayer();
-            } else {
-                document.getElementById("loader-status").innerText = "NO CHANNELS FOUND IN INDEX.HTML";
-            }
-        })
-        .catch(err => {
-            console.error("Error loading channel list:", err);
-            // যদি ইনডেক্স ফাইল রিড করতে সমস্যা হয়, সরাসরি সিঙ্গেল ইউআরএল প্লে হবে
-            initPlayer();
+    if (streamSource) {
+        const player = jwplayer("player").setup({
+            playlist: [{ file: streamSource, type: "hls" }],
+            width: "100%",
+            height: "100%",
+            autostart: true,
+            stretching: "exactfit",
+            skin: { name: "glow" },
+            displaytitle: false
         });
 
-    // ২. জাস্ট প্লেয়ার ইনিশিয়ালাইজেশন
-    function initPlayer() {
-        if (streamSource) {
-            playerInstance = jwplayer("player").setup({
-                playlist: [{ file: currentCleanSource, type: "hls" }],
-                width: "100%", height: "100%",
-                autostart: true, stretching: "exactfit",
-                skin: { name: "glow" }, displaytitle: false
-            });
-
-            setupPlayerEvents(playerInstance);
-        } else {
-            document.getElementById("loader-status").innerText = "NO STREAM URL PROVIDED";
-        }
-    }
-
-    function setupPlayerEvents(player) {
         player.on("ready", () => {
             player.setMute(false);
             player.setVolume(100);
         });
+
         player.on("play", () => {
             document.getElementById("loader").classList.add("hide-now");
-            showOSD();
         });
+
         player.on("buffer", () => {
-            resetLoaderUI("BUFFERING...");
             document.getElementById("loader").classList.remove("hide-now");
         });
+
         player.on("error", () => {
-            showErrorUI();
+            const loader = document.getElementById("loader");
+            loader.classList.remove("hide-now"); 
+            loader.innerHTML = `
+                <div class="error-content">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>Stream Offline!</p>
+                    <div class="brand-name">RS LIVE <span>TV</span></div>
+                </div>
+            `;
         });
+
+    } else {
+        document.getElementById("loader").innerHTML = '<div class="brand-name">No Stream URL Found</div>';
     }
-
-    // ৩. নো-রিফ্রেশ ইনস্ট্যান্ট চ্যানেল সুইচার মেথড
-    function changeChannel(direction) {
-        if (channelList.length === 0) return;
-
-        if (direction === 'next') {
-            currentIdx = (currentIdx + 1) < channelList.length ? currentIdx + 1 : 0;
-        } else if (direction === 'prev') {
-            currentIdx = (currentIdx - 1) >= 0 ? currentIdx - 1 : channelList.length - 1;
-        }
-        
-        let nextChannel = channelList[currentIdx];
-        
-        resetLoaderUI(`SWITCHING TO<br><span style="color:#00c3ff; font-weight:bold;">${nextChannel.name}</span>`);
-        document.getElementById("loader").classList.remove("hide-now");
-
-        if (playerInstance) {
-            playerInstance.load([{ file: nextChannel.url, type: "hls" }]);
-            playerInstance.play();
-        }
-
-        // ব্রাউজার ব্যাকগ্রাউন্ড ইউআরএল ক্লিন রাখা
-        const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + `?url=${encodeURIComponent(nextChannel.url)}`;
-        window.history.pushState({ path: newUrl }, '', newUrl);
-    }
-
-    // স্ক্রিনের কোণায় ওএসডি (OSD) চ্যানেল নাম শো করা
-    function showOSD() {
-        if (channelList[currentIdx]) {
-            const infoBox = document.getElementById("channel-info-box");
-            infoBox.innerText = `Ch: ${channelList[currentIdx].name}`;
-            infoBox.style.opacity = "1";
-            
-            clearTimeout(infoTimeout);
-            infoTimeout = setTimeout(() => {
-                infoBox.style.opacity = "0";
-            }, 4000); // ৪ সেকেন্ড পর নাম ভ্যানিশ হবে
-        }
-    }
-
-    function resetLoaderUI(text) {
-        const statusEl = document.getElementById("loader-status");
-        if (statusEl) statusEl.innerHTML = text;
-    }
-
-    function showErrorUI() {
-        const loader = document.getElementById("loader");
-        loader.classList.remove("hide-now"); 
-        loader.innerHTML = `
-            <div style="text-align: center; color: #fff; z-index: 100;">
-                <i class="fas fa-exclamation-triangle" style="font-size: 40px; color: #ff4d4d; margin-bottom: 15px;"></i>
-                <p style="letter-spacing: 1px; font-weight: 600;">STREAM OFFLINE / ERROR</p>
-                <div class="brand-name" style="margin-top: 10px;">RS LIVE <span>TV</span></div>
-            </div>
-        `;
-    }
-
-    // রিমোট কন্ট্রোল সাপোর্ট (Left / Right বাটন)
-    document.addEventListener('keydown', function(event) {
-        if (event.keyCode === 37) {
-            event.preventDefault();
-            changeChannel('prev');
-        } else if (event.keyCode === 39) {
-            event.preventDefault();
-            changeChannel('next');
-        }
-    });
 </script>
 
 </body>
