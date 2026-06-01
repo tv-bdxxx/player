@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,6 +37,7 @@
             position: absolute; top:0; left:0; width:100%; height:100%;
             background: #000; display:flex; justify-content:center; align-items:center;
             z-index:99; transition: opacity 0.5s ease, visibility 0.5s ease;
+            flex-direction: column;
         }
 
         /* ব্যানার ইমেজ স্টাইল (ফুল স্ক্রিন মোবাইল ফ্রেন্ডলি) */
@@ -46,6 +48,23 @@
             background: #000;
         }
         
+        /* --- লোডিং স্পিনার CSS --- */
+        .loading-spinner {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top-color: #00c3ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            z-index: 100; /* ব্যানার ইমেজের উপরে থাকবে */
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         .hide-now { opacity: 0 !important; visibility: hidden !important; }
 
         /* এরর মেসেজ স্টাইল */
@@ -58,9 +77,10 @@
 <body>
 
 <div id="player-wrapper">
-    <!-- এখানে লোডারের ভেতরে আপনার ব্যানার ইমেজ সেট করা হয়েছে -->
+    <!-- এখানে লোডারের ভেতরে স্পিনার যোগ করা হয়েছে -->
     <div id="loader">
         <img src="https://i.postimg.cc/FRNb0tRG/file-0000000014e871fa8c3841bf3fa5b6bf.png" alt="RS LIVE TV" class="banner-img">
+        <div class="loading-spinner"></div>
     </div>
     <div id="player"></div>
 </div>
@@ -112,3 +132,5 @@
 
 </body>
 </html>
+
+```
