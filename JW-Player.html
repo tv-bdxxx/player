@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-    <title>RS Player Pro - Compact Loader</title>
+    <title>RS Player Pro - Premium Loader</title>
 
     <script src="https://content.jwplatform.com/libraries/IDzF9Zmk.js"></script>
     <script>
@@ -31,36 +31,84 @@
             backdrop-filter: none !important; 
         }
 
-        /* --- লোডার ডিজাইন (সাইজ ছোট করা হয়েছে) --- */
+        /* --- নতুন প্রিমিয়াম লোডার ডিজাইন --- */
         #loader {
             position: absolute; top:0; left:0; width:100%; height:100%;
-            background: #000; display:flex; justify-content:center; align-items:center;
-            z-index:99; flex-direction: column; transition: opacity 0.4s ease;
+            background: radial-gradient(circle, #0a0a16 0%, #000000 100%); display:flex; justify-content:center; align-items:center;
+            z-index:99; flex-direction: column; transition: opacity 0.4s ease, visibility 0.4s ease;
         }
 
         .loader-container {
             position: relative; 
-            width: 100px; /* ১৫০ থেকে কমিয়ে ১০০ করা হয়েছে */
-            height: 100px; /* ১৫০ থেকে কমিয়ে ১০০ করা হয়েছে */
+            width: 110px; 
+            height: 110px; 
             display: flex; justify-content: center; align-items: center;
         }
 
-        .loader-brand { text-align: center; z-index: 10; }
-        .tv-icon { font-size: 24px; color: #00c3ff; text-shadow: 0 0 10px #00c3ff; } /* আইকন সাইজ কিছুটা কমানো হয়েছে */
-        .brand-name { font-size: 10px; font-weight: 700; color: #fff; text-transform: uppercase; margin-top: 5px; letter-spacing: 1px; }
-        .brand-name span { color: #00c3ff; }
+        .loader-brand { 
+            text-align: center; 
+            z-index: 10; 
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+        
+        .tv-icon { 
+            font-size: 26px; 
+            color: #00c3ff; 
+            filter: drop-shadow(0 0 8px #00c3ff);
+        }
+        
+        .brand-name { 
+            font-size: 10px; 
+            font-weight: 800; 
+            color: #fff; 
+            text-transform: uppercase; 
+            margin-top: 6px; 
+            letter-spacing: 1.5px; 
+        }
+        .brand-name span { color: #00c3ff; text-shadow: 0 0 10px rgba(0, 195, 255, 0.6); }
 
+        /* মাল্টি-লেয়ার নিয়ন রিং অ্যানিমেশন */
         .neon-ring {
             position: absolute; width: 100%; height: 100%;
-            border-radius: 50%; border: 2px solid transparent;
-            animation: rotate-vortex 1.5s linear infinite;
+            border-radius: 50%; border: 3px solid transparent;
         }
-        .neon-ring:nth-child(1) { border-top: 2px solid #00c3ff; border-right: 2px solid #00c3ff; box-shadow: 0 0 10px #00c3ff; }
-        .neon-ring:nth-child(2) { border-bottom: 2px solid #ff007f; border-left: 2px solid #ff007f; animation-direction: reverse; animation-duration: 2s; box-shadow: 0 0 10px #ff007f; }
+        
+        /* প্রথম রিং (সায়ান ক্লকওয়াইজ) */
+        .neon-ring:nth-child(1) { 
+            border-top: 3px solid #00c3ff; 
+            filter: drop-shadow(0 0 8px #00c3ff);
+            animation: spin-clockwise 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite; 
+        }
+        
+        /* দ্বিতীয় রিং (ম্যাজেন্টা কাউন্টার-ক্লকওয়াইজ) */
+        .neon-ring:nth-child(2) { 
+            border-bottom: 3px solid #ff007f; 
+            filter: drop-shadow(0 0 8px #ff007f);
+            animation: spin-counter 1.5s linear infinite; 
+        }
 
-        @keyframes rotate-vortex { 100% { transform: rotate(360deg); } }
+        /* তৃতীয় রিং (সফট গ্লো ব্যাকগ্রাউন্ড ট্র্যাকার) */
+        .neon-ring:nth-child(3) { 
+            border: 3px solid rgba(255, 255, 255, 0.05);
+        }
 
-        .loading-text { color: rgba(255, 255, 255, 0.6); font-size: 10px; margin-top: 15px; letter-spacing: 2px; text-transform: uppercase; }
+        /* অ্যানিমেশন কীফ্রেম */
+        @keyframes spin-clockwise { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes spin-counter { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
+        @keyframes pulse-glow { 0%, 100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(1.05); opacity: 1; } }
+        @keyframes fade-text { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+        /* বাফারিং টেক্সট */
+        .loading-text { 
+            color: #00c3ff; 
+            font-size: 9px; 
+            margin-top: 20px; 
+            letter-spacing: 3px; 
+            text-transform: uppercase; 
+            font-weight: 600;
+            animation: fade-text 1.5s ease-in-out infinite;
+            text-shadow: 0 0 5px rgba(0, 195, 255, 0.4);
+        }
 
         /* --- ভিডিও সাইড কাটা ফিক্স --- */
         .jw-video.jw-reset { 
@@ -71,7 +119,7 @@
 
         /* এরর মেসেজ */
         .error-content { text-align: center; color: #fff; z-index: 100; }
-        .error-content i { font-size: 40px; color: #ff4d4d; margin-bottom: 15px; }
+        .error-content i { font-size: 40px; color: #ff4d4d; margin-bottom: 15px; filter: drop-shadow(0 0 10px #ff4d4d); }
     </style>
 </head>
 <body>
@@ -81,12 +129,13 @@
         <div class="loader-container">
             <div class="neon-ring"></div>
             <div class="neon-ring"></div>
+            <div class="neon-ring"></div>
             <div class="loader-brand">
                 <i class="fas fa-tv tv-icon"></i>
                 <div class="brand-name">RS LIVE <span>TV</span></div>
             </div>
         </div>
-        <div class="loading-text">BUFFERING...</div>
+        <div class="loading-text">LOADING STREAM</div>
     </div>
     <div id="player"></div>
 </div>
@@ -125,7 +174,7 @@
             loader.innerHTML = `
                 <div class="error-content">
                     <i class="fas fa-exclamation-triangle"></i>
-                    <p>Stream Offline!</p>
+                    <p style="margin-bottom:10px; font-weight:600; letter-spacing:1px;">STREAM OFFLINE</p>
                     <div class="brand-name">RS LIVE <span>TV</span></div>
                 </div>
             `;
