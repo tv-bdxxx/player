@@ -1,199 +1,146 @@
-<!DOCTYPE html>  
-<html lang="en">  
+<!DOCTYPE html>  <html lang="en">  
 <head>  
     <meta charset="UTF-8">  
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">  
-    <title>RS Player Pro - Premium Loader</title>  
-    
-    <!-- JW Player Library -->
-    <script src="https://jwplatform.com"></script>  
-    <script>  
-        jwplayer.key="Khpp2dHxlBJHC8MCmLnBuV2jK/DwDnJMniwF6EO9HC/riJ712ZmbHg==";  
-    </script>  
+    <title>RS Player Pro - Compact Loader</title>  <script src="https://content.jwplatform.com/libraries/IDzF9Zmk.js"></script>  
+<script>  
+    jwplayer.key="Khpp2dHxlBJHC8MCmLnBuV2jK/DwDnJMniwF6EO9HC/riJ712ZmbHg==";  
+</script>  
 
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cloudflare.com">  
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">  
 
-    <style>  
-        * { margin:0; padding:0; box-sizing:border-box; }  
-        html, body { width:100%; height:100%; background:#000 !important; overflow:hidden; font-family: 'Segoe UI', sans-serif; position: fixed; }  
-          
-        #player-wrapper {   
-            position: relative;   
-            width: 100%;   
-            height: 100%;   
-            overflow: hidden;   
-            background: #000 !important;   
-        }  
+<style>  
+    * { margin:0; padding:0; box-sizing:border-box; }  
+    html, body { width:100%; height:100%; background:#000; overflow:hidden; font-family: 'Segoe UI', sans-serif; position: fixed; }  
+      
+    #player-wrapper {   
+        position: relative;   
+        width: 100%;   
+        height: 100%;   
+        overflow: hidden;   
+        background: #000;   
+    }  
 
-        #player {   
-            width: 100% !important;   
-            height: 100% !important;   
-            position: absolute;   
-            top: 0 !important;   
-            left: 0 !important;   
-            transform: scale(1.01) !important;
-            background: #000 !important;
-        }  
+    /* প্লেয়ারকে সামান্য (0.5%) বড় করে স্ক্রিনের মাত্র ১-২ পিক্সেল বাইরে পাঠানো হয়েছে */  
+    #player {   
+        width: 100.6% !important;   
+        height: 100.6% !important;   
+        position: absolute;   
+        top: -0.3% !important;   
+        left: -0.3% !important;   
+    }  
 
-        /* --- কন্ট্রোলার কাস্টমাইজেশন --- */  
-        .jw-skin-glow .jw-display-icon-container {   
-            background: rgba(255, 255, 255, 0.1) !important;   
-            border: 1px solid rgba(255, 255, 255, 0.2);   
-            backdrop-filter: none !important;   
-        }  
-        .jw-skin-glow .jw-button-color { color: #ffffff !important; }  
-        .jw-skin-glow .jw-controlbar {   
-            background: transparent !important;   
-            backdrop-filter: none !important;   
-        }  
-        .jw-preview { background-color: #000 !important; }
+    /* --- কন্ট্রোলার কাস্টমাইজেশন --- */  
+    .jw-skin-glow .jw-display-icon-container {   
+        background: rgba(255, 255, 255, 0.1) !important;   
+        border: 1px solid rgba(255, 255, 255, 0.2);   
+        backdrop-filter: none !important;   
+    }  
+    .jw-skin-glow .jw-button-color { color: #ffffff !important; }  
+    .jw-skin-glow .jw-controlbar {   
+        background: transparent !important;   
+        backdrop-filter: none !important;   
+    }  
 
-        /* --- আপডেটেড লোডার ডিজাইন --- */  
-        #loader {  
-            position: absolute; top:0; left:0; width:100%; height:100%;  
-            background: #000; display:flex; justify-content:center; align-items:center;  
-            z-index:999; flex-direction: column; transition: opacity 0.3s ease, visibility 0.3s ease;  
-            cursor: pointer; /* ক্লিক করার সুবিধা বোঝাতে */
-        }  
+    /* --- লোডার ডিজাইন --- */  
+    #loader {  
+        position: absolute; top:0; left:0; width:100%; height:100%;  
+        background: #000; display:flex; justify-content:center; align-items:center;  
+        z-index:99; flex-direction: column; transition: opacity 0.4s ease;  
+    }  
 
-        .loader-container {  
-            position: relative;   
-            width: 110px;   
-            height: 110px;   
-            display: flex; justify-content: center; align-items: center;  
-        }  
+    .loader-container {  
+        position: relative;   
+        width: 100px;   
+        height: 100px;   
+        display: flex; justify-content: center; align-items: center;  
+    }  
 
-        .loader-brand { text-align: center; z-index: 10; }  
-        .tv-icon { font-size: 26px; color: #00c3ff; text-shadow: 0 0 12px #00c3ff; animation: pulse-icon 2s infinite alternate; }   
-        .brand-name { font-size: 11px; font-weight: 700; color: #fff; text-transform: uppercase; margin-top: 6px; letter-spacing: 1px; }  
-        .brand-name span { color: #00c3ff; text-shadow: 0 0 5px rgba(0,195,255,0.5); }  
+    .loader-brand { text-align: center; z-index: 10; }  
+    .tv-icon { font-size: 24px; color: #00c3ff; text-shadow: 0 0 10px #00c3ff; }   
+    .brand-name { font-size: 10px; font-weight: 700; color: #fff; text-transform: uppercase; margin-top: 5px; letter-spacing: 1px; }  
+    .brand-name span { color: #00c3ff; }  
 
-        .neon-ring {  
-            position: absolute; width: 100%; height: 100%;  
-            border-radius: 50%; border: 2.5px solid transparent;  
-            animation: rotate-vortex 1.2s cubic-bezier(0.42, 0, 0.58, 1) infinite;  
-        }  
-        .neon-ring:nth-child(1) { border-top: 2.5px solid #00c3ff; border-right: 2.5px solid #00c3ff; box-shadow: 0 0 15px #00c3ff; }  
-        .neon-ring:nth-child(2) { border-bottom: 2.5px solid #ff007f; border-left: 2.5px solid #ff007f; animation-direction: reverse; animation-duration: 1.6s; box-shadow: 0 0 15px #ff007f; }  
+    .neon-ring {  
+        position: absolute; width: 100%; height: 100%;  
+        border-radius: 50%; border: 2px solid transparent;  
+        animation: rotate-vortex 1.5s linear infinite;  
+    }  
+    .neon-ring:nth-child(1) { border-top: 2px solid #00c3ff; border-right: 2px solid #00c3ff; box-shadow: 0 0 10px #00c3ff; }  
+    .neon-ring:nth-child(2) { border-bottom: 2px solid #ff007f; border-left: 2px solid #ff007f; animation-direction: reverse; animation-duration: 2s; box-shadow: 0 0 10px #ff007f; }  
 
-        @keyframes rotate-vortex { 100% { transform: rotate(360deg); } }  
-        @keyframes pulse-icon { 0% { transform: scale(0.95); opacity: 0.8; } 100% { transform: scale(1.05); opacity: 1; } }
+    @keyframes rotate-vortex { 100% { transform: rotate(360deg); } }  
 
-        .loading-text { color: rgba(0, 195, 255, 0.9); font-size: 11px; font-weight: bold; margin-top: 20px; letter-spacing: 2px; text-transform: uppercase; text-shadow: 0 0 8px rgba(0,195,255,0.6); animation: text-pulse 1.5s infinite ease-in-out; }  
-        
-        @keyframes text-pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+    .loading-text { color: rgba(255, 255, 255, 0.6); font-size: 10px; margin-top: 15px; letter-spacing: 2px; text-transform: uppercase; }  
 
-        /* ভিডিও স্ট্রেচিং */  
-        .jw-video.jw-reset {   
-            object-fit: fill !important;   
-            background: #000 !important;
-        }  
-          
-        .hide-now { opacity: 0 !important; visibility: hidden !important; pointer-events: none; }  
+    /* ভিডিওকে ফুলস্ক্রিন স্ট্রেচিং মোডে রাখা হয়েছে */  
+    .jw-video.jw-reset {   
+        object-fit: fill !important;   
+    }  
+      
+    .hide-now { opacity: 0 !important; visibility: hidden !important; }  
 
-        /* এরর ও অ্যাকশন মেসেজ */  
-        .error-content { text-align: center; color: #fff; z-index: 100; padding: 20px; }  
-        .error-content i { font-size: 42px; color: #ff4d4d; margin-bottom: 15px; text-shadow: 0 0 12px rgba(255,77,77,0.6); }  
-        .error-content p { font-size: 14px; margin-bottom: 18px; font-weight: 500; letter-spacing: 0.5px; }  
-        
-        .btn-retry {  
-            background: #00c3ff; color: #000; border: none; padding: 9px 20px;   
-            border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer;  
-            text-transform: uppercase; letter-spacing: 1px; transition: 0.2s; margin-bottom: 18px;  
-        }  
-        .btn-retry:hover { background: #fff; box-shadow: 0 0 15px #00c3ff; transform: translateY(-1px); }  
-    </style>  
+    /* এরর মেসেজ */  
+    .error-content { text-align: center; color: #fff; z-index: 100; }  
+    .error-content i { font-size: 40px; color: #ff4d4d; margin-bottom: 15px; }  
+</style>
+
 </head>  
-<body>  
-
-<div id="player-wrapper">  
-    <!-- লোডারে ক্লিক করলে যেন ভিডিও প্লে হয় তার জন্য onclick দেওয়া হয়েছে -->
-    <div id="loader" onclick="startPlayer()">  
-        <div id="loader-dynamic-area" style="display: flex; flex-direction: column; align-items: center;">  
-            <div class="loader-container">  
-                <div class="neon-ring"></div>  
-                <div class="neon-ring"></div>  
-                <div class="loader-brand">  
-                    <i class="fas fa-tv tv-icon"></i>  
-                    <div class="brand-name">RS LIVE <span>TV</span></div>  
-                </div>  
+<body>  <div id="player-wrapper">  
+    <div id="loader">  
+        <div class="loader-container">  
+            <div class="neon-ring"></div>  
+            <div class="neon-ring"></div>  
+            <div class="loader-brand">  
+                <i class="fas fa-tv tv-icon"></i>  
+                <div class="brand-name">RS LIVE <span>TV</span></div>  
             </div>  
-            <div class="loading-text" id="status-text">TAP TO PLAY</div>  
         </div>  
+        <div class="loading-text">BUFFERING...</div>  
     </div>  
     <div id="player"></div>  
-</div>  
-
-<script>  
+</div>  <script>  
     const urlParams = new URLSearchParams(window.location.search);  
     const streamSource = urlParams.get('url');  
-    const loader = document.getElementById("loader");  
-    const loaderDynamicArea = document.getElementById("loader-dynamic-area");  
-    const statusText = document.getElementById("status-text");
-    let playerInstance = null;
   
     if (streamSource) {  
-        playerInstance = jwplayer("player").setup({  
+        const player = jwplayer("player").setup({  
             playlist: [{ file: streamSource, type: "hls" }],  
             width: "100%",  
             height: "100%",  
             autostart: true,  
-            muted: true, /* অটো-প্লে ব্লক এড়াতে ডিফল্ট মিউট */  
-            stretching: "exactfit",  
+            stretching: "exactfit", /* বর্ডার কাটার জন্য exactfit-ই লাগবে */  
             skin: { name: "glow" },  
-            displaytitle: false,  
-            liveTimeout: 20  
+            displaytitle: false  
         });  
   
-        playerInstance.on("play", () => {  
-            loader.classList.add("hide-now");  
-            playerInstance.setMute(false);  
-            playerInstance.setVolume(100);  
+        player.on("ready", () => {  
+            player.setMute(false);  
+            player.setVolume(100);  
         });  
   
-        playerInstance.on("buffer", () => {  
-            statusText.innerText = "BUFFERING...";
-            loader.classList.remove("hide-now");  
-        });  
-
-        playerInstance.on("bufferChange", () => {  
-            if(playerInstance.getState() === "playing") {  
-                loader.classList.add("hide-now");  
-            }  
+        player.on("play", () => {  
+            document.getElementById("loader").classList.add("hide-now");  
         });  
   
-        playerInstance.on("error", () => {  
+        player.on("buffer", () => {  
+            document.getElementById("loader").classList.remove("hide-now");  
+        });  
+  
+        player.on("error", () => {  
+            const loader = document.getElementById("loader");  
             loader.classList.remove("hide-now");   
-            loaderDynamicArea.innerHTML = `  
+            loader.innerHTML = `  
                 <div class="error-content">  
                     <i class="fas fa-exclamation-triangle"></i>  
-                    <p>Stream Offline or Failed!</p>  
-                    <button class="btn-retry" onclick="window.location.reload()"><i class="fas fa-sync-alt"></i> Try Reconnecting</button>  
+                    <p>Stream Offline!</p>  
                     <div class="brand-name">RS LIVE <span>TV</span></div>  
                 </div>  
             `;  
         });  
   
     } else {  
-        loaderDynamicArea.innerHTML = `  
-            <div class="error-content">  
-                <i class="fas fa-link" style="color:#00c3ff;"></i>  
-                <div class="brand-name" style="font-size:14px; margin-top:10px;">No Stream URL Found</div>  
-            </div>  
-        `;  
+        document.getElementById("loader").innerHTML = '<div class="brand-name">No Stream URL Found</div>';  
     }  
-
-    // ইউজার স্ক্রিনে টাচ বা ক্লিক করলে প্লেয়ার ফোর্স স্টার্ট করার ফাংশন
-    function startPlayer() {
-        if (playerInstance && playerInstance.getState() !== "playing") {
-            statusText.innerText = "LOADING...";
-            playerInstance.play();
-            playerInstance.setMute(false);  
-            playerInstance.setVolume(100);
-        }
-    }
-</script>  
-
-</body>  
-</html>
+</script>  </body>  
+</html>  আপডেট ভার্শন করে দাও সব মিলিয়ে আর কোনো বাগ থাকলে ফিক্স করে দাও
