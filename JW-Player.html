@@ -16,7 +16,7 @@
         * { margin:0; padding:0; box-sizing:border-box; }
         html, body { width:100%; height:100%; background:#000; overflow:hidden; font-family: 'Segoe UI', sans-serif; position: fixed; }
         
-        #player-wrapper { position: relative; width: 100%; height: 100%; overflow: hidden; }
+        #player-wrapper { position: relative; width: 100%; height: 100%; overflow: hidden; background: #000; }
         #player { width:100% !important; height:100% !important; position: absolute; top:0; left:0; }
 
         /* --- কন্ট্রোলার কাস্টমাইজেশন --- */
@@ -31,7 +31,7 @@
             backdrop-filter: none !important; 
         }
 
-        /* --- লোডার ডিজাইন (সাইজ ছোট করা হয়েছে) --- */
+        /* --- লোডার ডিজাইন --- */
         #loader {
             position: absolute; top:0; left:0; width:100%; height:100%;
             background: #000; display:flex; justify-content:center; align-items:center;
@@ -40,13 +40,13 @@
 
         .loader-container {
             position: relative; 
-            width: 100px; /* ১৫০ থেকে কমিয়ে ১০০ করা হয়েছে */
-            height: 100px; /* ১৫০ থেকে কমিয়ে ১০০ করা হয়েছে */
+            width: 100px; 
+            height: 100px; 
             display: flex; justify-content: center; align-items: center;
         }
 
         .loader-brand { text-align: center; z-index: 10; }
-        .tv-icon { font-size: 24px; color: #00c3ff; text-shadow: 0 0 10px #00c3ff; } /* আইকন সাইজ কিছুটা কমানো হয়েছে */
+        .tv-icon { font-size: 24px; color: #00c3ff; text-shadow: 0 0 10px #00c3ff; } 
         .brand-name { font-size: 10px; font-weight: 700; color: #fff; text-transform: uppercase; margin-top: 5px; letter-spacing: 1px; }
         .brand-name span { color: #00c3ff; }
 
@@ -62,9 +62,9 @@
 
         .loading-text { color: rgba(255, 255, 255, 0.6); font-size: 10px; margin-top: 15px; letter-spacing: 2px; text-transform: uppercase; }
 
-        /* --- ভিডিও সাইড কাটা ফিক্স --- */
+        /* --- ভিডিও সাইড কাটা এবং সাদা দাগ ফিক্স --- */
         .jw-video.jw-reset { 
-            object-fit: fill !important; 
+            object-fit: contain !important; 
         }
         
         .hide-now { opacity: 0 !important; visibility: hidden !important; }
@@ -101,7 +101,7 @@
             width: "100%",
             height: "100%",
             autostart: true,
-            stretching: "exactfit",
+            stretching: "uniform", /* exactfit পরিবর্তন করে uniform করা হয়েছে */
             skin: { name: "glow" },
             displaytitle: false
         });
