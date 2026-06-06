@@ -16,8 +16,22 @@
         * { margin:0; padding:0; box-sizing:border-box; }
         html, body { width:100%; height:100%; background:#000; overflow:hidden; font-family: 'Segoe UI', sans-serif; position: fixed; }
         
-        #player-wrapper { position: relative; width: 100%; height: 100%; overflow: hidden; background: #000; }
-        #player { width:100% !important; height:100% !important; position: absolute; top:0; left:0; }
+        #player-wrapper { 
+            position: relative; 
+            width: 100%; 
+            height: 100%; 
+            overflow: hidden; 
+            background: #000; 
+        }
+
+        /* প্লেয়ারকে সামান্য (0.5%) বড় করে স্ক্রিনের মাত্র ১-২ পিক্সেল বাইরে পাঠানো হয়েছে */
+        #player { 
+            width: 100.6% !important; 
+            height: 100.6% !important; 
+            position: absolute; 
+            top: -0.3% !important; 
+            left: -0.3% !important; 
+        }
 
         /* --- কন্ট্রোলার কাস্টমাইজেশন --- */
         .jw-skin-glow .jw-display-icon-container { 
@@ -62,9 +76,9 @@
 
         .loading-text { color: rgba(255, 255, 255, 0.6); font-size: 10px; margin-top: 15px; letter-spacing: 2px; text-transform: uppercase; }
 
-        /* --- ভিডিও সাইড কাটা এবং সাদা দাগ ফিক্স --- */
+        /* ভিডিওকে ফুলস্ক্রিন স্ট্রেচিং মোডে রাখা হয়েছে */
         .jw-video.jw-reset { 
-            object-fit: contain !important; 
+            object-fit: fill !important; 
         }
         
         .hide-now { opacity: 0 !important; visibility: hidden !important; }
@@ -101,7 +115,7 @@
             width: "100%",
             height: "100%",
             autostart: true,
-            stretching: "uniform", /* exactfit পরিবর্তন করে uniform করা হয়েছে */
+            stretching: "exactfit", /* বর্ডার কাটার জন্য exactfit-ই লাগবে */
             skin: { name: "glow" },
             displaytitle: false
         });
