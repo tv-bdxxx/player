@@ -1,4 +1,59 @@
-<div class="loader-container">
-  <div class="minimal-loader"></div>
-  <p class="loading-text">লোড হচ্ছে...</p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>হালকা পাতলা লোডার</title>
+  <style>
+    /* পুরো স্ক্রিনের মাঝখানে লোডারটি রাখার জন্য */
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    .loader-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f9f9f9; /* হালকা ব্যাকগ্রাউন্ড */
+      font-family: Arial, sans-serif;
+    }
+
+    /* হালকা-পাতলা স্পিনার ডিজাইন */
+    .minimal-loader {
+      width: 45px;
+      height: 45px;
+      border: 3px solid rgba(0, 123, 255, 0.1); /* আবছা গোল দাগ */
+      border-radius: 50%;
+      border-top-color: #007bff; /* মূল নীল রঙের অংশ */
+      animation: spin 0.8s ease-in-out infinite; /* স্মুথ ঘোরার গতি */
+    }
+
+    /* "লোড হচ্ছে..." লেখার স্টাইল */
+    .loading-text {
+      margin-top: 15px;
+      color: #555555;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ঘোরার অ্যানিমেশন ইফেক্ট */
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="loader-container">
+    <div class="minimal-loader"></div>
+    <div class="loading-text">লোড হচ্ছে...</div>
+  </div>
+
+</body>
+</html>
