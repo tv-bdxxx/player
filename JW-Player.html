@@ -1,112 +1,77 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-    <title>RS Player Pro - ১০০+ চ্যানেল ও রিমোট</title>
+    <title>RS Player Pro - Compact Loader</title>
 
-    <!-- JWPlayer লাইব্রেরি -->
     <script src="https://content.jwplatform.com/libraries/IDzF9Zmk.js"></script>
     <script>
-        jwplayer.key = "Khpp2dHxlBJHC8MCmLnBuV2jK/DwDnJMniwF6EO9HC/riJ712ZmbHg==";
+        jwplayer.key="Khpp2dHxlBJHC8MCmLnBuV2jK/DwDnJMniwF6EO9HC/riJ712ZmbHg==";
     </script>
 
-    <!-- ফন্ট অ্যাওসাম -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; user-select:none; }
-        html, body { width:100%; height:100%; background:#000; overflow:hidden; font-family:'Segoe UI',sans-serif; position:fixed; }
-        #player-wrapper { position:relative; width:100%; height:100%; overflow:hidden; }
-        #player { width:100% !important; height:100% !important; position:absolute; top:0; left:0; }
-        .jw-skin-glow .jw-display-icon-container { background:rgba(255,255,255,0.1) !important; border:1px solid rgba(255,255,255,0.2); }
-        .jw-skin-glow .jw-button-color { color:#ffffff !important; }
-        .jw-skin-glow .jw-controlbar { background:transparent !important; }
-        .jw-video.jw-reset { object-fit:fill !important; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html, body { width:100%; height:100%; background:#000; overflow:hidden; font-family: 'Segoe UI', sans-serif; position: fixed; }
+        
+        #player-wrapper { position: relative; width: 100%; height: 100%; overflow: hidden; }
+        #player { width:100% !important; height:100% !important; position: absolute; top:0; left:0; }
 
-        /* নেভিগেশন বার */
-        .custom-nav-bar {
-            position: absolute; bottom: 80px; left: 0; right: 0;
-            display: flex; justify-content: center; gap: 20px; z-index: 20;
-            background: rgba(0,0,0,0.7); backdrop-filter: blur(10px);
-            padding: 8px 20px; border-radius: 60px; width: fit-content; margin: 0 auto;
-            border: 1px solid rgba(255,255,255,0.2);
+        /* --- কন্ট্রোলার কাস্টমাইজেশন --- */
+        .jw-skin-glow .jw-display-icon-container { 
+            background: rgba(255, 255, 255, 0.1) !important; 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            backdrop-filter: none !important; 
         }
-        .nav-btn {
-            background: rgba(255,255,255,0.15); border: none; color: white;
-            font-size: 1.3rem; padding: 6px 20px; border-radius: 40px; cursor: pointer;
-            transition: 0.1s; display: flex; align-items: center; gap: 8px;
+        .jw-skin-glow .jw-button-color { color: #ffffff !important; }
+        .jw-skin-glow .jw-controlbar { 
+            background: transparent !important; 
+            backdrop-filter: none !important; 
         }
-        .nav-btn:active { transform: scale(0.95); background: #00c3ff; color:#000; }
-        .channel-name { background: rgba(0,0,0,0.7); padding: 6px 15px; border-radius: 40px; font-size:0.9rem; color:#00c3ff; font-weight:bold; }
 
-        /* রিমোট কন্ট্রোল (আপডেটেড) */
-        .remote-control {
-            position: fixed; bottom: 20px; right: 20px; width: 310px;
-            background: rgba(0,0,0,0.88); backdrop-filter: blur(16px);
-            border-radius: 28px; padding: 14px; border: 1px solid rgba(255,255,255,0.25);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 999; cursor: grab;
-        }
-        .remote-control:active { cursor: grabbing; }
-        .remote-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 12px; color: #ddd; font-size: 0.8rem;
-            border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px;
-        }
-        .remote-header i { cursor: pointer; padding: 5px; }
-        .remote-buttons {
-            display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 12px;
-        }
-        .remote-btn {
-            background: rgba(255,255,255,0.12); border: none; border-radius: 40px;
-            padding: 10px 0; color: white; font-size: 1rem; cursor: pointer; transition: 0.05s linear;
-        }
-        .remote-btn:active { background: #00c3ff; color: black; transform: scale(0.96); }
-        .big-row { display: flex; gap: 12px; margin-bottom: 12px; }
-        .big-row .remote-btn { flex: 1; }
-
-        /* নাম্বার প্যাড (0-9) */
-        .number-pad {
-            display: grid; grid-template-columns: repeat(5,1fr); gap: 8px; margin: 12px 0;
-        }
-        .num-key {
-            background: #1e1e2f; padding: 8px 0; border-radius: 30px; font-weight: bold;
-            font-size: 1.1rem; border: none; color: white;
-        }
-        .goto-area {
-            display: flex; gap: 8px; margin-top: 5px; align-items: center;
-        }
-        #channelJumpInput {
-            flex: 1; background: #2a2a3a; border: none; padding: 8px 12px;
-            border-radius: 50px; color: white; text-align: center; font-size: 0.9rem;
-        }
-        #gotoBtn {
-            background: #00c3ff; border: none; padding: 8px 16px; border-radius: 40px;
-            font-weight: bold; color: #000; cursor: pointer;
-        }
-        .minimize { background: none; border: none; color: #aaa; margin-top: 8px; font-size: 0.7rem; cursor: pointer; width: 100%; }
-
-        /* লোডার (আগের মতো) */
+        /* --- লোডার ডিজাইন (সাইজ ছোট করা হয়েছে) --- */
         #loader {
             position: absolute; top:0; left:0; width:100%; height:100%;
-            background:#000; display:flex; justify-content:center; align-items:center;
-            z-index:99; flex-direction: column; transition: opacity 0.3s;
+            background: #000; display:flex; justify-content:center; align-items:center;
+            z-index:99; flex-direction: column; transition: opacity 0.4s ease;
         }
-        .loader-container { position:relative; width:100px; height:100px; display:flex; justify-content:center; align-items:center; }
-        .tv-icon { font-size:24px; color:#00c3ff; text-shadow:0 0 10px #00c3ff; }
-        .brand-name { font-size:10px; font-weight:700; color:#fff; margin-top:5px; }
-        .neon-ring { position:absolute; width:100%; height:100%; border-radius:50%; border:2px solid transparent; animation:rotate-vortex 1.5s linear infinite; }
-        .neon-ring:nth-child(1) { border-top:2px solid #00c3ff; border-right:2px solid #00c3ff; }
-        .neon-ring:nth-child(2) { border-bottom:2px solid #ff007f; border-left:2px solid #ff007f; animation-direction:reverse; animation-duration:2s; }
-        @keyframes rotate-vortex { 100%{ transform:rotate(360deg); } }
-        .hide-now { opacity:0 !important; visibility:hidden !important; }
-        .error-content { text-align:center; color:#fff; }
-        .error-content i { font-size:40px; color:#ff4d4d; }
-        @media (max-width:640px) {
-            .remote-control { width: 290px; right: 5px; bottom: 5px; padding: 10px; }
-            .custom-nav-bar { bottom: 70px; gap: 12px; padding: 5px 12px; }
-            .nav-btn { padding: 4px 12px; font-size: 1rem; }
+
+        .loader-container {
+            position: relative; 
+            width: 100px; /* ১৫০ থেকে কমিয়ে ১০০ করা হয়েছে */
+            height: 100px; /* ১৫০ থেকে কমিয়ে ১০০ করা হয়েছে */
+            display: flex; justify-content: center; align-items: center;
         }
+
+        .loader-brand { text-align: center; z-index: 10; }
+        .tv-icon { font-size: 24px; color: #00c3ff; text-shadow: 0 0 10px #00c3ff; } /* আইকন সাইজ কিছুটা কমানো হয়েছে */
+        .brand-name { font-size: 10px; font-weight: 700; color: #fff; text-transform: uppercase; margin-top: 5px; letter-spacing: 1px; }
+        .brand-name span { color: #00c3ff; }
+
+        .neon-ring {
+            position: absolute; width: 100%; height: 100%;
+            border-radius: 50%; border: 2px solid transparent;
+            animation: rotate-vortex 1.5s linear infinite;
+        }
+        .neon-ring:nth-child(1) { border-top: 2px solid #00c3ff; border-right: 2px solid #00c3ff; box-shadow: 0 0 10px #00c3ff; }
+        .neon-ring:nth-child(2) { border-bottom: 2px solid #ff007f; border-left: 2px solid #ff007f; animation-direction: reverse; animation-duration: 2s; box-shadow: 0 0 10px #ff007f; }
+
+        @keyframes rotate-vortex { 100% { transform: rotate(360deg); } }
+
+        .loading-text { color: rgba(255, 255, 255, 0.6); font-size: 10px; margin-top: 15px; letter-spacing: 2px; text-transform: uppercase; }
+
+        /* --- ভিডিও সাইড কাটা ফিক্স --- */
+        .jw-video.jw-reset { 
+            object-fit: fill !important; 
+        }
+        
+        .hide-now { opacity: 0 !important; visibility: hidden !important; }
+
+        /* এরর মেসেজ */
+        .error-content { text-align: center; color: #fff; z-index: 100; }
+        .error-content i { font-size: 40px; color: #ff4d4d; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -118,268 +83,58 @@
             <div class="neon-ring"></div>
             <div class="loader-brand">
                 <i class="fas fa-tv tv-icon"></i>
-                <div class="brand-name">RS LIVE <span style="color:#00c3ff;">TV</span></div>
+                <div class="brand-name">RS LIVE <span>TV</span></div>
             </div>
         </div>
         <div class="loading-text">BUFFERING...</div>
     </div>
     <div id="player"></div>
-
-    <!-- নেভিগেশন বার -->
-    <div class="custom-nav-bar">
-        <button class="nav-btn" id="prevBtn"><i class="fas fa-step-backward"></i> Prev</button>
-        <div class="channel-name" id="channelNameDisplay">চ্যানেল ১</div>
-        <button class="nav-btn" id="nextBtn">Next <i class="fas fa-step-forward"></i></button>
-    </div>
-
-    <!-- আপডেটেড রিমোট কন্ট্রোল -->
-    <div class="remote-control" id="remoteControl">
-        <div class="remote-header">
-            <span><i class="fas fa-tv"></i> রিমোট</span>
-            <i class="fas fa-times-circle" id="closeRemote" style="opacity:0.7;"></i>
-        </div>
-        <div class="remote-buttons">
-            <button class="remote-btn" id="remotePlayPause"><i class="fas fa-play"></i>/<i class="fas fa-pause"></i></button>
-            <button class="remote-btn" id="remoteVolUp"><i class="fas fa-volume-up"></i> +</button>
-            <button class="remote-btn" id="remoteVolDown"><i class="fas fa-volume-down"></i> -</button>
-        </div>
-        <div class="big-row">
-            <button class="remote-btn" id="remotePrev"><i class="fas fa-backward"></i> Prev</button>
-            <button class="remote-btn" id="remoteNext">Next <i class="fas fa-forward"></i></button>
-        </div>
-        <div class="big-row">
-            <button class="remote-btn" id="remoteFullscreen"><i class="fas fa-expand"></i> Full</button>
-            <button class="remote-btn" id="remoteMute"><i class="fas fa-volume-mute"></i> Mute</button>
-        </div>
-        <!-- নাম্বার প্যাড 0-9 -->
-        <div class="number-pad">
-            <button class="remote-btn num-key" data-channel="1">1</button>
-            <button class="remote-btn num-key" data-channel="2">2</button>
-            <button class="remote-btn num-key" data-channel="3">3</button>
-            <button class="remote-btn num-key" data-channel="4">4</button>
-            <button class="remote-btn num-key" data-channel="5">5</button>
-            <button class="remote-btn num-key" data-channel="6">6</button>
-            <button class="remote-btn num-key" data-channel="7">7</button>
-            <button class="remote-btn num-key" data-channel="8">8</button>
-            <button class="remote-btn num-key" data-channel="9">9</button>
-            <button class="remote-btn num-key" data-channel="0">0</button>
-        </div>
-        <!-- সরাসরি চ্যানেল নাম্বার দিয়ে যাওয়ার অপশন -->
-        <div class="goto-area">
-            <input type="number" id="channelJumpInput" placeholder="চ্যানেল নং (1-100+)" min="1">
-            <button id="gotoBtn">GO</button>
-        </div>
-        <button class="minimize" id="minimizeRemote"><i class="fas fa-window-minimize"></i> ছোট করুন</button>
-    </div>
 </div>
 
 <script>
-    // ------------------ ১০০+ চ্যানেল তৈরির উদাহরণ (ডেমো) ------------------
-    // আপনি এখানে আপনার নিজের ১০০+ চ্যানেলের নাম ও URL বসাতে পারেন।
-    // নিচের ফাংশনটি ১০০টি চ্যানেল জেনারেট করে (ডেমো লিংক সহ)। বাস্তবে আপনি চাইলে ম্যানুয়ালি অ্যারে তৈরি করুন।
-    function generateChannelList(count) {
-        let channels = [];
-        for (let i = 1; i <= count; i++) {
-            let name = `চ্যানেল ${i}`;
-            // উদাহরণ URL: বিভিন্ন ডেমো ভিডিও বা আপনার লিংক। এখানে আমি ৫টি ভিন্ন ভিডিও রোটেট করেছি শুধু উদাহরণের জন্য।
-            const demoUrls = [
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFunflies.mp4",
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
-                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4"
-            ];
-            let url = demoUrls[i % demoUrls.length];
-            channels.push({ name: name, url: url });
-        }
-        return channels;
-    }
-
-    // ১০০+ চ্যানেল তৈরি করছি (এখন ১০০টি)
-    let channelList = generateChannelList(100);
-    
-    // URL প্যারামিটার থাকলে সেটা প্রথম চ্যানেলে বসানো যায় (অপশনাল)
     const urlParams = new URLSearchParams(window.location.search);
-    const directUrl = urlParams.get('url');
-    if (directUrl) {
-        channelList.unshift({ name: "ডাইরেক্ট স্ট্রিম", url: directUrl });
-    }
+    const streamSource = urlParams.get('url');
 
-    let currentChannelIndex = 0;
-    let player = null;
+    if (streamSource) {
+        const player = jwplayer("player").setup({
+            playlist: [{ file: streamSource, type: "hls" }],
+            width: "100%",
+            height: "100%",
+            autostart: true,
+            stretching: "exactfit",
+            skin: { name: "glow" },
+            displaytitle: false
+        });
 
-    // ফাংশন: চ্যানেল লোড করা
-    function loadChannel(index) {
-        if (index < 0) index = 0;
-        if (index >= channelList.length) index = channelList.length - 1;
-        currentChannelIndex = index;
-        const channel = channelList[currentChannelIndex];
-        document.getElementById("channelNameDisplay").innerText = channel.name;
-        
-        const loader = document.getElementById("loader");
-        loader.classList.remove("hide-now");
-        
-        if (player) {
-            player.load([{ file: channel.url, type: "hls" }]);
-            player.play().catch(e => console.log("Auto play"));
-        } else {
-            player = jwplayer("player").setup({
-                playlist: [{ file: channel.url, type: "hls" }],
-                width: "100%", height: "100%", autostart: true,
-                stretching: "exactfit", skin: { name: "glow" }, displaytitle: false
-            });
-            attachEvents();
-        }
-    }
+        player.on("ready", () => {
+            player.setMute(false);
+            player.setVolume(100);
+        });
 
-    function attachEvents() {
-        player.on("ready", () => { player.setVolume(80); player.setMute(false); });
-        player.on("play", () => { document.getElementById("loader").classList.add("hide-now"); });
-        player.on("buffer", () => { document.getElementById("loader").classList.remove("hide-now"); });
+        player.on("play", () => {
+            document.getElementById("loader").classList.add("hide-now");
+        });
+
+        player.on("buffer", () => {
+            document.getElementById("loader").classList.remove("hide-now");
+        });
+
         player.on("error", () => {
             const loader = document.getElementById("loader");
-            loader.classList.remove("hide-now");
-            loader.innerHTML = `<div class="error-content"><i class="fas fa-exclamation-triangle"></i><p>Stream Offline! অন্য চ্যানেল试试</p></div>`;
+            loader.classList.remove("hide-now"); 
+            loader.innerHTML = `
+                <div class="error-content">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>Stream Offline!</p>
+                    <div class="brand-name">RS LIVE <span>TV</span></div>
+                </div>
+            `;
         });
-    }
 
-    // নেক্সট / প্রিভিউ
-    function nextChannel() {
-        if (currentChannelIndex + 1 < channelList.length) loadChannel(currentChannelIndex + 1);
-        else { /* শেষ চ্যানেলে থামবে, চাইলে 0-এ যেতে পারেন */ }
+    } else {
+        document.getElementById("loader").innerHTML = '<div class="brand-name">No Stream URL Found</div>';
     }
-    function prevChannel() {
-        if (currentChannelIndex - 1 >= 0) loadChannel(currentChannelIndex - 1);
-    }
-    // নির্দিষ্ট চ্যানেল নাম্বারে যাওয়া (১-ভিত্তিক)
-    function gotoChannelNumber(num) {
-        let idx = num - 1;
-        if (idx >= 0 && idx < channelList.length) loadChannel(idx);
-    }
-
-    // ভলিউম, মিউট ইত্যাদি
-    function changeVolume(delta) {
-        if (!player) return;
-        let vol = player.getVolume();
-        let newVol = Math.min(100, Math.max(0, vol + delta));
-        player.setVolume(newVol);
-        if (newVol === 0) player.setMute(true);
-        else player.setMute(false);
-    }
-    function toggleMute() { if(player) player.setMute(!player.getMute()); }
-    function togglePlayPause() {
-        if (!player) return;
-        if (player.getState() === "playing") player.pause();
-        else player.play();
-    }
-    function toggleFullscreen() { if(player) player.setFullscreen(true); }
-
-    // শুরু করা
-    loadChannel(0);
-
-    // ---------- ডোম ইভেন্ট ----------
-    document.getElementById("prevBtn").addEventListener("click", prevChannel);
-    document.getElementById("nextBtn").addEventListener("click", nextChannel);
-    document.getElementById("remotePrev").addEventListener("click", prevChannel);
-    document.getElementById("remoteNext").addEventListener("click", nextChannel);
-    document.getElementById("remoteVolUp").addEventListener("click", () => changeVolume(10));
-    document.getElementById("remoteVolDown").addEventListener("click", () => changeVolume(-10));
-    document.getElementById("remoteMute").addEventListener("click", toggleMute);
-    document.getElementById("remotePlayPause").addEventListener("click", togglePlayPause);
-    document.getElementById("remoteFullscreen").addEventListener("click", toggleFullscreen);
-    
-    // নাম্বার বাটন 0-9
-    document.querySelectorAll(".num-key").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-            let chNum = parseInt(btn.getAttribute("data-channel"));
-            if (chNum === 0) chNum = 10;  // 0 চাপলে ১০ নম্বর চ্যানেল (বা আপনার ইচ্ছে মতো)
-            gotoChannelNumber(chNum);
-        });
-    });
-    
-    // GO বাটন ও ইনপুট
-    document.getElementById("gotoBtn").addEventListener("click", () => {
-        let inputVal = parseInt(document.getElementById("channelJumpInput").value);
-        if (!isNaN(inputVal) && inputVal >= 1 && inputVal <= channelList.length) {
-            gotoChannelNumber(inputVal);
-        } else {
-            alert(`১ থেকে ${channelList.length} পর্যন্ত চ্যানেল নম্বর দিন`);
-        }
-    });
-    document.getElementById("channelJumpInput").addEventListener("keypress", (e) => {
-        if (e.key === "Enter") document.getElementById("gotoBtn").click();
-    });
-
-    // কীবোর্ড শর্টকাট: লেফট/রাইট, নাম্বার, স্পেস, F, M, +/-
-    window.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowLeft") { prevChannel(); e.preventDefault(); }
-        else if (e.key === "ArrowRight") { nextChannel(); e.preventDefault(); }
-        else if (e.key === " " || e.key === "Space") { togglePlayPause(); e.preventDefault(); }
-        else if (e.key === "f" || e.key === "F") { toggleFullscreen(); e.preventDefault(); }
-        else if (e.key === "m" || e.key === "M") { toggleMute(); e.preventDefault(); }
-        else if (e.key === "+" || e.key === "=") { changeVolume(10); e.preventDefault(); }
-        else if (e.key === "-") { changeVolume(-10); e.preventDefault(); }
-        else if (!isNaN(parseInt(e.key))) {
-            let num = parseInt(e.key);
-            if (num >= 1 && num <= 9) gotoChannelNumber(num);
-            else if (num === 0) gotoChannelNumber(10);
-            e.preventDefault();
-        }
-    });
-
-    // রিমোট ড্র্যাগ করুন (আগের কোডের মতো)
-    const remote = document.getElementById("remoteControl");
-    let isDragging = false, offsetX, offsetY;
-    remote.addEventListener("mousedown", (e) => {
-        if (e.target.closest('.remote-header') && !e.target.closest('#closeRemote')) {
-            isDragging = true;
-            offsetX = e.clientX - remote.offsetLeft;
-            offsetY = e.clientY - remote.offsetTop;
-            remote.style.cursor = 'grabbing';
-            e.preventDefault();
-        }
-    });
-    window.addEventListener("mousemove", (e) => {
-        if (isDragging) {
-            let left = e.clientX - offsetX, top = e.clientY - offsetY;
-            left = Math.min(window.innerWidth - remote.offsetWidth, Math.max(0, left));
-            top = Math.min(window.innerHeight - remote.offsetHeight, Math.max(0, top));
-            remote.style.left = left + "px"; remote.style.right = "auto"; remote.style.top = top + "px";
-        }
-    });
-    window.addEventListener("mouseup", () => { isDragging = false; remote.style.cursor = 'grab'; });
-    remote.addEventListener("touchstart", (e) => {
-        if (e.target.closest('.remote-header') && !e.target.closest('#closeRemote')) {
-            isDragging = true;
-            const touch = e.touches[0];
-            offsetX = touch.clientX - remote.offsetLeft;
-            offsetY = touch.clientY - remote.offsetTop;
-            e.preventDefault();
-        }
-    });
-    window.addEventListener("touchmove", (e) => {
-        if (isDragging) {
-            const touch = e.touches[0];
-            let left = touch.clientX - offsetX, top = touch.clientY - offsetY;
-            left = Math.min(window.innerWidth - remote.offsetWidth, Math.max(0, left));
-            top = Math.min(window.innerHeight - remote.offsetHeight, Math.max(0, top));
-            remote.style.left = left + "px"; remote.style.right = "auto"; remote.style.top = top + "px";
-            e.preventDefault();
-        }
-    });
-    window.addEventListener("touchend", () => { isDragging = false; });
-    document.getElementById("closeRemote").addEventListener("click", () => { remote.style.display = "none"; });
-    let minimized = false;
-    document.getElementById("minimizeRemote").addEventListener("click", () => {
-        if (!minimized) {
-            remote.style.width = "55px"; remote.style.height = "55px"; remote.style.borderRadius = "50%";
-            remote.style.overflow = "hidden"; remote.style.padding = "0";
-            remote.innerHTML = `<div style="text-align:center; margin-top:15px; color:white;"><i class="fas fa-tv"></i></div>`;
-            minimized = true;
-        } else {
-            location.reload(); // রিস্টোর করার সহজ উপায়
-        }
-    });
 </script>
+
 </body>
 </html>
