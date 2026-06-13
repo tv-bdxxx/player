@@ -1,115 +1,140 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rs Live Tv - Shak Player Convert</title>     
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/shaka-player.ui.min.js" crossorigin="anonymous"></script>    
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.7.11/controls.min.css" crossorigin="anonymous">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-  
-  <style>      
-    * { margin: 0; padding: 0; box-sizing: border-box; }      
-    html, body { background: #000; height: 100vh; width: 100vw; overflow: hidden; font-family: sans-serif; }      
-    .shaka-video-container { position: absolute; inset: 0; width: 100%; height: 100%; }      
-    video { width: 100%; height: 100%; background: #000; object-fit: contain; }      
-    .shaka-spinner-container { display: none !important; }
-    .ratio-menu { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); background: rgba(0, 0, 0, 0.9); padding: 10px; border-radius: 8px; display: none; flex-direction: column; gap: 8px; z-index: 1000; border: 1px solid rgba(255,255,255,0.2); }
-    .ratio-menu.active { display: flex; }
-    .ratio-btn { background: rgba(255, 255, 255, 0.1); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-size: 13px; }
-    .ratio-btn.selected { background: #e74c3c; }
-    .custom-icon-btn { background: none; border: none; padding: 0 5px; color: white; cursor: pointer; display: flex; align-items: center; }
-  </style>  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <title>RS Player Pro - Compact Loader</title>
+
+    <script src="https://content.jwplatform.com/libraries/IDzF9Zmk.js"></script>
+    <script>
+        jwplayer.key="Khpp2dHxlBJHC8MCmLnBuV2jK/DwDnJMniwF6EO9HC/riJ712ZmbHg==";
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html, body { width:100%; height:100%; background:#000; overflow:hidden; font-family: 'Segoe UI', sans-serif; position: fixed; }
+        
+        #player-wrapper { position: relative; width: 100%; height: 100%; overflow: hidden; }
+        #player { width:100% !important; height:100% !important; position: absolute; top:0; left:0; }
+
+        /* --- কন্ট্রোলার কাস্টমাইজেশন --- */
+        .jw-skin-glow .jw-display-icon-container { 
+            background: rgba(255, 255, 255, 0.1) !important; 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            backdrop-filter: none !important; 
+        }
+        .jw-skin-glow .jw-button-color { color: #ffffff !important; }
+        .jw-skin-glow .jw-controlbar { 
+            background: transparent !important; 
+            backdrop-filter: none !important; 
+        }
+
+        /* --- লোডার ডিজাইন (সাইজ ছোট করা হয়েছে) --- */
+        #loader {
+            position: absolute; top:0; left:0; width:100%; height:100%;
+            background: #000; display:flex; justify-content:center; align-items:center;
+            z-index:99; flex-direction: column; transition: opacity 0.4s ease;
+        }
+
+        .loader-container {
+            position: relative; 
+            width: 100px; /* ১৫০ থেকে কমিয়ে ১০০ করা হয়েছে */
+            height: 100px; /* ১৫০ থেকে কমিয়ে ১০০ করা হয়েছে */
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        .loader-brand { text-align: center; z-index: 10; }
+        .tv-icon { font-size: 24px; color: #00c3ff; text-shadow: 0 0 10px #00c3ff; } /* আইকন সাইজ কিছুটা কমানো হয়েছে */
+        .brand-name { font-size: 10px; font-weight: 700; color: #fff; text-transform: uppercase; margin-top: 5px; letter-spacing: 1px; }
+        .brand-name span { color: #00c3ff; }
+
+        .neon-ring {
+            position: absolute; width: 100%; height: 100%;
+            border-radius: 50%; border: 2px solid transparent;
+            animation: rotate-vortex 1.5s linear infinite;
+        }
+        .neon-ring:nth-child(1) { border-top: 2px solid #00c3ff; border-right: 2px solid #00c3ff; box-shadow: 0 0 10px #00c3ff; }
+        .neon-ring:nth-child(2) { border-bottom: 2px solid #ff007f; border-left: 2px solid #ff007f; animation-direction: reverse; animation-duration: 2s; box-shadow: 0 0 10px #ff007f; }
+
+        @keyframes rotate-vortex { 100% { transform: rotate(360deg); } }
+
+        .loading-text { color: rgba(255, 255, 255, 0.6); font-size: 10px; margin-top: 15px; letter-spacing: 2px; text-transform: uppercase; }
+
+        /* --- ভিডিও সাইড কাটা ফিক্স --- */
+        .jw-video.jw-reset { 
+            object-fit: fill !important; 
+        }
+        
+        .hide-now { opacity: 0 !important; visibility: hidden !important; }
+
+        /* এরর মেসেজ */
+        .error-content { text-align: center; color: #fff; z-index: 100; }
+        .error-content i { font-size: 40px; color: #ff4d4d; margin-bottom: 15px; }
+    </style>
 </head>
-<body>    
+<body>
 
-  <div class="shaka-video-container" id="video-container" data-shaka-player-container="" shaka-controls="true">      
-    <video autoplay playsinline id="video" class="shaka-video"></video>  
-    
-    <div class="ratio-menu" id="ratioMenu">
-        <button class="ratio-btn selected" onclick="changeRatio('contain', this)">Original</button>
-        <button class="ratio-btn" onclick="changeRatio('fill', this)">Stretch</button>             
-        <button class="ratio-btn" onclick="changeRatio('cover', this)">Fill (Zoom)</button>
-    </div>  
-  </div>
-       
-  <script>      
-    const video = document.getElementById('video');
-    const ratioMenu = document.getElementById('ratioMenu');
+<div id="player-wrapper">
+    <div id="loader">
+        <div class="loader-container">
+            <div class="neon-ring"></div>
+            <div class="neon-ring"></div>
+            <div class="loader-brand">
+                <i class="fas fa-tv tv-icon"></i>
+                <div class="brand-name">RS LIVE <span>TV</span></div>
+            </div>
+        </div>
+        <div class="loading-text">BUFFERING...</div>
+    </div>
+    <div id="player"></div>
+</div>
 
-    function changeRatio(mode, btn) {
-        document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        video.style.objectFit = mode;
-        ratioMenu.classList.remove('active'); 
-    }
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const streamSource = urlParams.get('url');
 
-    // URL থেকে ডাইনামিক প্যারামিটার নেওয়ার ফাংশন
-    const params = new URLSearchParams(window.location.search);
-    const streamUrl = params.get("url");
-    const keyId = params.get("key_id");
-    const key = params.get("key");
-
-    document.addEventListener('DOMContentLoaded', async () => {        
-      shaka.polyfill.installAll();        
-      if (!shaka.Player.isBrowserSupported()) return;          
-      const container = document.getElementById('video-container');      
-      const player = new shaka.Player(video);        
-      const ui = new shaka.ui.Overlay(player, container, video);        
-      const controls = ui.getControls();
-
-      ui.configure({          
-        controlPanelElements: ['play_pause', 'mute', 'volume', 'spacer', 'quality', 'fullscreen'],
-        volumeBarColors: { base: 'rgba(255, 255, 255, 0.3)', level: 'rgb(255, 255, 255)' },          
-        seekBarColors: { base: 'rgba(255, 255, 255, 0.3)', buffered: 'rgba(255, 255, 255, 0.5)', played: 'rgb(255, 0, 0)' }
-      });  
-
-      container.addEventListener('click', () => {
-          if (ratioMenu.classList.contains('active')) ratioMenu.classList.remove('active');
-          else controls.showControls();
-      });
-
-      const fullscreenBtn = document.querySelector('.shaka-fullscreen-button');
-      
-      // রেশিও চেঞ্জার বাটন
-      const ratioIcon = document.createElement('button');
-      ratioIcon.innerHTML = '<i class="material-icons-round" style="font-size:24px;">aspect_ratio</i>';
-      ratioIcon.classList.add('custom-icon-btn');
-      fullscreenBtn.parentNode.insertBefore(ratioIcon, fullscreenBtn);
-      ratioIcon.onclick = (e) => { e.stopPropagation(); ratioMenu.classList.toggle('active'); };
-
-      // ডাইনামিক DRM সেটিংস কনফিগারেশন
-      if (keyId && key) {
-        const clearKeysConfig = {};
-        clearKeysConfig[keyId] = key;
-        player.configure({         
-          drm: { 
-            clearKeys: clearKeysConfig 
-          }       
-        });          
-      } else {
-        // যদি ইউআরএল-এ কোনো কি না দেওয়া থাকে, তবে কোডের ডিফল্ট কি-টি কাজ করবে
-        player.configure({         
-          drm: { 
-            clearKeys: { 
-              "549ab7cd35a64bb6bb479ecead04d69d": "829799ed534d11fcadeb4b192467e050" 
-            } 
-          }       
+    if (streamSource) {
+        const player = jwplayer("player").setup({
+            playlist: [{ file: streamSource, type: "hls" }],
+            width: "100%",
+            height: "100%",
+            autostart: true,
+            stretching: "exactfit",
+            skin: { name: "glow" },
+            displaytitle: false
         });
-      }
-      
-      // চ্যানেল লিংক ডাইনামিক লোড
-      try {          
-          // যদি URL-এ কোনো লিংক দেওয়া থাকে তবে সেটা চলবে, না থাকলে ডিফল্ট লিংকটি চলবে
-          const finalUrl = streamUrl ? streamUrl : "https://cdn.jsdelivr.net/gh/nurmd2006/empty@main/stream/by/your-abbu/srktv.m3u8";
-          await player.load(finalUrl);
-          video.muted = false;
-          video.volume = 1.0;
-      } catch (error) { 
-          console.error('Error loading stream:', error); 
-      }      
-    });    
-  </script>
-  <script src="https://pl26377172.effectivecpmnetwork.com/d7/8b/93/d78b9343b29d8ff89244b094b359e591.js"></script>
+
+        player.on("ready", () => {
+            player.setMute(false);
+            player.setVolume(100);
+        });
+
+        player.on("play", () => {
+            document.getElementById("loader").classList.add("hide-now");
+        });
+
+        player.on("buffer", () => {
+            document.getElementById("loader").classList.remove("hide-now");
+        });
+
+        player.on("error", () => {
+            const loader = document.getElementById("loader");
+            loader.classList.remove("hide-now"); 
+            loader.innerHTML = `
+                <div class="error-content">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>Stream Offline!</p>
+                    <div class="brand-name">RS LIVE <span>TV</span></div>
+                </div>
+            `;
+        });
+
+    } else {
+        document.getElementById("loader").innerHTML = '<div class="brand-name">No Stream URL Found</div>';
+    }
+</script>
+
 </body>
 </html>
