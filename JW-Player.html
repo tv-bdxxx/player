@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shak Player</title>
     
-    <!-- JW Player Core Script -->
-    <script src="https://jwpsrv.com/library/Ff6JgI9tEeS94CIACpW7BA.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
     
     <style>
         * {
@@ -28,7 +27,6 @@
             width: 100% !important;
             height: 100% !important;
         }
-        /* প্লেয়ারের লোডিং টেক্সট বা ইরর মেসেজ স্টাইল */
         .error-msg {
             color: #ff4d4d;
             text-align: center;
@@ -42,39 +40,34 @@
     <div id="shak-player"></div>
 
     <script>
-        // URL থেকে 'url' প্যারামিটারটি খুঁজে বের করার ফাংশন
+        // URL থেকে ভিডিও লিংক নেওয়ার ফাংশন
         function getQueryParam(name) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(name);
         }
 
-        // ইউজার যে ভিডিও লিংকটি পাস করবে সেটি ধরা
         const videoUrl = getQueryParam('url');
 
         if (videoUrl) {
-            // JW Player সেটআপ
-            jwplayer("shak-player").setup({
-                file: videoUrl,
+            // নতুন শক্তিশালী প্লেয়ার সেটআপ
+            var player = new Clappr.Player({
+                source: videoUrl,
+                parentId: "#shak-player",
                 width: "100%",
                 height: "100%",
-                aspectratio: "16:9",
-                autostart: true,
-                controls: true,
-                stretching: "uniform",
-                // প্লেয়ারের স্কিন কালার কাস্টমাইজেশন (Shak Player Theme)
-                skin: {
-                    name: "seven",
-                    active: "#ff0000", // কন্ট্রোলবারের একটিভ কালার (লাল)
-                    inactive: "#ffffff",
-                    background: "rgba(0, 0, 0, 0.6)"
+                autoPlay: true,
+                mute: false,
+                mediacontrol: { seekbar: "#ff0000", buttons: "#ffffff" }, // Shak Red Theme
+                playback: {
+                    playInline: true,
+                    crossOrigin: 'anonymous'
                 }
             });
         } else {
-            // যদি ইউআরএল-এ কোনো লিংক না থাকে
             document.getElementById('shak-player').innerHTML = `
                 <div class="error-msg">
                     <h3>কোনো ভিডিও লিংক পাওয়া যায়নি!</h3>
-                    <p>দয়া করে এভাবে লিংক ব্যবহার করুন: ?url=YOUR_VIDEO_URL</p>
+                    <p>দয়া করে লিংক এভাবে ব্যবহার করুন: ?url=YOUR_VIDEO_URL</p>
                 </div>
             `;
         }
