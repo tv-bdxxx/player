@@ -2,16 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-    <title>RS Live TV</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover">
+    <title>Rs Live TV Player</title>
 
-    <script src="https://content.jwplatform.com/libraries/IDzF9Zmk.js">
-    </script>
+    <script src="https://content.jwplatform.com/libraries/IDzF9Zmk.js"></script>
     <script>
-        jwplayer.key = "Khpp2dHxlBJHC8MCmLnBuV2jK/DwDnJMniwF6EO9HC/riJ712ZmbHg==";
+        jwplayer.key="Khpp2dHxlBJHC8MCmLnBuV2jK/DwDnJMniwF6EO9HC/riJ712ZmbHg==";
     </script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
         * {
@@ -19,21 +16,12 @@
             padding: 0;
             box-sizing: border-box;
         }
-        html,
-        body {
+        html, body {
             width: 100%;
             height: 100%;
             background: #000;
             overflow: hidden;
-            font-family: 'Segoe UI', sans-serif;
-            position: fixed;
-        }
-
-        #player-wrapper {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
         #player {
             width: 100% !important;
@@ -42,321 +30,110 @@
             top: 0;
             left: 0;
         }
-
-        /* --- JWPlayer কাস্টম --- */
-        .jw-skin-glow .jw-display-icon-container {
-            background: rgba(255, 255, 255, 0.1) !important;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: none !important;
-        }
-        .jw-skin-glow .jw-button-color {
-            color: #ffffff !important;
-        }
-        .jw-skin-glow .jw-controlbar {
-            background: transparent !important;
-            backdrop-filter: none !important;
-        }
-
-        .jw-video.jw-reset {
-            object-fit: fill !important;
-        }
-
-        /* --- লোডার (আপডেটেড) --- */
         #loader {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: #000;
+            background: #000000;
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 99;
+            z-index: 9999;
             flex-direction: column;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-            opacity: 1;
-            visibility: visible;
+            transition: opacity 0.3s ease;
         }
-
-        #loader.hide-now {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        .loader-container {
-            position: relative;
-            width: 100px;
-            height: 100px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .loader-brand {
-            text-align: center;
-            z-index: 10;
-        }
-        .tv-icon {
-            font-size: 24px;
-            color: #00c3ff;
-            text-shadow: 0 0 10px #00c3ff;
-        }
-        .brand-name {
-            font-size: 10px;
-            font-weight: 700;
-            color: #fff;
-            text-transform: uppercase;
-            margin-top: 5px;
-            letter-spacing: 1px;
-        }
-        .brand-name span {
-            color: #00c3ff;
-        }
-
-        .neon-ring {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+        .spinner {
+            width: 45px;
+            height: 45px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
             border-radius: 50%;
-            border: 2px solid transparent;
-            animation: rotate-vortex 1.5s linear infinite;
+            border-top-color: #3b82f6;
+            animation: spin 0.8s linear infinite;
         }
-        .neon-ring:nth-child(1) {
-            border-top: 2px solid #00c3ff;
-            border-right: 2px solid #00c3ff;
-            box-shadow: 0 0 10px #00c3ff;
-        }
-        .neon-ring:nth-child(2) {
-            border-bottom: 2px solid #ff007f;
-            border-left: 2px solid #ff007f;
-            animation-direction: reverse;
-            animation-duration: 2s;
-            box-shadow: 0 0 10px #ff007f;
-        }
-
-        @keyframes rotate-vortex {
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        .loading-text {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 10px;
+        #loader-text {
             margin-top: 15px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            color: #94a3b8;
+            font-size: 13px;
+            letter-spacing: 0.5px;
         }
-
-        /* এরর মেসেজ */
-        .error-content {
-            text-align: center;
-            color: #fff;
-            z-index: 100;
-        }
-        .error-content i {
-            font-size: 40px;
-            color: #ff4d4d;
-            margin-bottom: 15px;
-        }
-        .error-content .brand-name {
-            font-size: 10px;
-            font-weight: 700;
-            color: #fff;
-            text-transform: uppercase;
-            margin-top: 8px;
-            letter-spacing: 1px;
-        }
-        .error-content .brand-name span {
-            color: #00c3ff;
-        }
-        .error-content p {
-            font-size: 14px;
-            opacity: 0.7;
-            margin-top: 4px;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
 
-    <div id="player-wrapper">
-        <!-- লোডার -->
-        <div id="loader">
-            <div class="loader-container">
-                <div class="neon-ring"></div>
-                <div class="neon-ring"></div>
-                <div class="loader-brand">
-                    <i class="fas fa-tv tv-icon"></i>
-                    <div class="brand-name">RS LIVE <span>TV</span></div>
-                </div>
-            </div>
-            <div class="loading-text">BUFFERING...</div>
-        </div>
-        <div id="player"></div>
+    <div id="loader">
+        <div class="spinner"></div>
+        <div id="loader-text">Loading Stream...</div>
     </div>
 
+    <div id="player"></div>
+
     <script>
-        (function() {
-            'use strict';
+        // URL থেকে প্যারামিটার নেওয়ার ক্লিন লজিক
+        const urlParams = new URLSearchParams(window.location.search);
+        const streamUrl = urlParams.get('url');
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const streamSource = urlParams.get('url');
+        if (!streamUrl) {
+            document.getElementById("loader-text").innerHTML = "<span style='color:#ff4444;'>No Stream URL Found</span>";
+        }
 
-            // ─── ওরিয়েন্টেশন লক / আনলক ───
-            let orientationLocked = false;
+        // প্লেয়ার অপ্টিমাইজড কনফিগারেশন (বাফারিং কমানোর জন্য)
+        const player = jwplayer("player").setup({
+            file: streamUrl,
+            width: "100%",
+            height: "100%",
+            aspectratio: "16:9",
+            stretching: "fill",
+            preload: "auto", // ব্যাকগ্রাউন্ডে স্ট্রিম প্রিলোড করবে
+            autostart: true,
+            mute: false,
+            controls: true,
+            playbackRateControls: false
+        });
 
-            async function lockLandscape() {
-                if (!screen.orientation || !screen.orientation.lock) return;
-                try {
-                    await screen.orientation.lock('landscape');
-                    orientationLocked = true;
-                } catch (e) {
-                    try {
-                        await screen.orientation.lock('landscape-primary');
-                        orientationLocked = true;
-                    } catch (e2) { /* সাইলেন্ট */ }
-                }
+        // ফুলস্ক্রিন হ্যান্ডলার
+        player.on("fullscreen", function(event){
+            if(event.fullscreen && screen.orientation && screen.orientation.lock) {
+                screen.orientation.lock("landscape").catch(function(err) {
+                    console.log("Orientation lock ignored: ", err);
+                });
             }
+            setTimeout(() => {
+                const videoEl = document.querySelector('.jw-video');
+                if(videoEl) videoEl.style.setProperty('object-fit', 'fill', 'important');
+            }, 100);
+        });
 
-            async function unlockOrientation() {
-                if (!screen.orientation || !screen.orientation.unlock) return;
-                if (orientationLocked) {
-                    try {
-                        await screen.orientation.unlock();
-                        orientationLocked = false;
-                    } catch (e) { /* সাইলেন্ট */ }
-                }
-            }
+        // প্লেয়ার ইভেন্ট কন্ট্রোল
+        player.on("ready", fadeAndHideLoader);
+        player.on("play", fadeAndHideLoader);
 
-            function handleFullscreenChange() {
-                const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
-                if (isFs) {
-                    lockLandscape();
-                } else {
-                    unlockOrientation();
-                }
-            }
+        player.on("error", function(){
+            showLoader("<span style='color:#ff4444;'>Stream Failed or Invalid URL</span>");
+        });
 
-            document.addEventListener('fullscreenchange', handleFullscreenChange);
-            document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        player.on("buffer", function(){
+            showLoader("Buffering...");
+        });
 
-            // ─── JWPlayer সেটআপ ───
-            if (!streamSource) {
-                document.getElementById("loader").innerHTML = `
-                    <div class="error-content">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <p>No Stream URL Found</p>
-                        <div class="brand-name">RS LIVE <span>TV</span></div>
-                    </div>
-                `;
-                return;
-            }
+        function showLoader(text) {
+            const loader = document.getElementById("loader");
+            loader.style.display = "flex";
+            loader.style.opacity = "1";
+            document.getElementById("loader-text").innerHTML = text;
+        }
 
-            const player = jwplayer("player").setup({
-                playlist: [{ file: streamSource, type: "hls" }],
-                width: "100%",
-                height: "100%",
-                autostart: true,
-                stretching: "exactfit",
-                skin: { name: "glow" },
-                displaytitle: false
-            });
-
-            const loaderEl = document.getElementById("loader");
-
-            // ফাংশন: লোডার দেখানো/লুকানো
-            function showLoader(show) {
-                if (show) {
-                    loaderEl.classList.remove("hide-now");
-                } else {
-                    loaderEl.classList.add("hide-now");
-                }
-            }
-
-            // ─── JWPlayer ইভেন্ট হ্যান্ডলিং (বাফারিং ফিক্স) ───
-
-            // প্লেয়ার রেডি হলে
-            player.on("ready", function() {
-                player.setMute(false);
-                player.setVolume(100);
-                // লোডার দেখাবে (কিছুক্ষণ পরে প্লে না হলে)
-                showLoader(true);
-            });
-
-            // যখন প্লে শুরু হয় (প্লেব্যাক চলছে)
-            player.on("play", function() {
-                showLoader(false);
-            });
-
-            // বাফারিং শুরু হলে
-            player.on("buffer", function() {
-                showLoader(true);
-            });
-
-            // বাফারিং শেষ হলে (bufferChange ইভেন্ট)
-            player.on("bufferChange", function(e) {
-                // e.bufferPercent 0-100, যদি 100 হয় তাহলে বাফারিং শেষ
-                if (e.bufferPercent >= 100) {
-                    showLoader(false);
-                } else {
-                    showLoader(true);
-                }
-            });
-
-            // প্লেব্যাক রেজিউম (পজ থেকে আবার প্লে)
-            player.on("play", function() {
-                showLoader(false);
-            });
-
-            // পজে গেলে লোডার দেখানোর দরকার নেই, তবে বাফারিং থাকলে দেখাবে
-            player.on("pause", function() {
-                // পজে গেলে লোডার লুকিয়ে রাখি (যদি না বাফারিং হয়)
-                // কিন্তু buffer ইভেন্ট নিজেই দেখাবে
-            });
-
-            // আইডল (প্লেব্যাক থেমে গেলে)
-            player.on("idle", function() {
-                showLoader(true);
-            });
-
-            // error
-            player.on("error", function() {
-                showLoader(true);
-                loaderEl.innerHTML = `
-                    <div class="error-content">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <p>Stream Offline!</p>
-                        <div class="brand-name">RS LIVE <span>TV</span></div>
-                    </div>
-                `;
-            });
-
-            // ফুলস্ক্রিন ইভেন্ট
-            player.on('fullscreen', function(e) {
-                if (e.fullscreen === true) {
-                    lockLandscape();
-                } else {
-                    unlockOrientation();
-                }
-            });
-
-            // ─── অতিরিক্ত: যদি প্লেয়ার লোড হতে অনেক সময় নেয়, তাহলে লোডার দেখাতেই থাকবে ───
-            // স্টার্টে ৩ সেকেন্ড পর যদি প্লে না হয়, তবু লোডার থাকবে (ডিফল্ট)
-
-            // ─── ব্যাকগ্রাউন্ডে গেলে ওরিয়েন্টেশন রিসেট ───
-            document.addEventListener('visibilitychange', function() {
-                if (document.hidden) {
-                    unlockOrientation();
-                }
-            });
-
-            console.log('✅ RS Live TV (বাফারিং ফিক্স সহ)');
-            console.log('📺 Stream:', streamSource);
-
-        })();
+        function fadeAndHideLoader() {
+            const loader = document.getElementById("loader");
+            loader.style.opacity = "0";
+            setTimeout(() => { 
+                loader.style.display = "none"; 
+            }, 300);
+        }
     </script>
-
 </body>
 </html>
