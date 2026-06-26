@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover">
-    <title>RS Live TV Player</title>
+    <title>Rs Live TV Player</title>
 
-    <!-- JW Player Library -->
     <script src="https://content.jwplatform.com/libraries/IDzF9Zmk.js"></script>
     <script>
-        jwplayer.key = "Khpp2dHxlBJHC8MCmLnBuV2jK/DwDnJMniwF6EO9HC/riJ712ZmbHg==";
+        jwplayer.key="Khpp2dHxlBJHC8MCmLnBuV2jK/DwDnJMniwF6EO9HC/riJ712ZmbHg==";
     </script>
 
     <style>
@@ -44,7 +43,6 @@
             z-index: 9999;
             flex-direction: column;
             transition: opacity 0.3s ease;
-            pointer-events: none;
         }
         .spinner {
             width: 45px;
@@ -59,15 +57,9 @@
             color: #94a3b8;
             font-size: 13px;
             letter-spacing: 0.5px;
-            text-align: center;
-            max-width: 80%;
         }
         @keyframes spin {
             to { transform: rotate(360deg); }
-        }
-        /* মোবাইলে ভিডিও ফুল স্ক্রিনে স্ট্রেচ */
-        .jw-video {
-            object-fit: fill !important;
         }
     </style>
 </head>
@@ -81,51 +73,53 @@
     <div id="player"></div>
 
     <script>
-        // ============================================================
-        // URL প্যারামিটার থেকে স্ট্রিম লিংক নেওয়া
-        // ============================================================
+        // URL থেকে প্যারামিটার নেওয়ার ক্লিন লজিক
         const urlParams = new URLSearchParams(window.location.search);
         const streamUrl = urlParams.get('url');
 
         if (!streamUrl) {
-            document.getElementById("loader-text").innerHTML = 
-                "<span style='color:#ff4444;'>❌ No Stream URL Found</span>";
-            // প্লেয়ার সেটআপ না করেই থামানো ভালো
-            throw new Error("Missing 'url' parameter");
+            document.getElementById("loader-text").innerHTML = "<span style='color:#ff4444;'>No Stream URL Found</span>";
         }
 
-        // ============================================================
-        // JW Player – অপটিমাইজড কনফিগারেশন
-        // ============================================================
+        // প্লেয়ার অপ্টিমাইজড কনফিগারেশন (বাফারিং কমানোর জন্য)
         const player = jwplayer("player").setup({
             file: streamUrl,
             width: "100%",
             height: "100%",
             aspectratio: "16:9",
             stretching: "fill",
-            preload: "auto",
-            autostart: false,          // ⭐ প্রস্তুত হলে আমরা নিজেরা start করব
+            preload: "auto", // ব্যাকগ্রাউন্ডে স্ট্রিম প্রিলোড করবে
+            autostart: true,
             mute: false,
             controls: true,
-            playbackRateControls: false,
-            // ⭐ বাফার সাইজ বাড়ানো
-            bufferlength: 10,
-            // ⭐ HLS-নির্দিষ্ট অপশন
-            hls: {
-                // কম লেটেন্সি মোড
-                lowLatencyMode: true,
-                // সর্বোচ্চ বাফার দৈর্ঘ্য (সেকেন্ড)
-                maxBufferLength: 30,
-                // নেটওয়ার্ক রিডান্ডেন্সি
-                forceNAT: true,
-                // আবার চেষ্টার সংখ্যা
-                retryLimit: 3
-            }
+            playbackRateControls: false
         });
 
-        // ============================================================
-        // লোডার কন্ট্রোল
-        // ============================================================
+        // ফুলস্ক্রিন হ্যান্ডলার
+        player.on("fullscreen", function(event){
+            if(event.fullscreen && screen.orientation && screen.orientation.lock) {
+                screen.orientation.lock("landscape").catch(function(err) {
+                    console.log("Orientation lock ignored: ", err);
+                });
+            }
+            setTimeout(() => {
+                const videoEl = document.querySelector('.jw-video');
+                if(videoEl) videoEl.style.setProperty('object-fit', 'fill', 'important');
+            }, 100);
+        });
+
+        // প্লেয়ার ইভেন্ট কন্ট্রোল
+        player.on("ready", fadeAndHideLoader);
+        player.on("play", fadeAndHideLoader);
+
+        player.on("error", function(){
+            showLoader("<span style='color:#ff4444;'>Stream Failed or Invalid URL</span>");
+        });
+
+        player.on("buffer", function(){
+            showLoader("Buffering...");
+        });
+
         function showLoader(text) {
             const loader = document.getElementById("loader");
             loader.style.display = "flex";
@@ -133,105 +127,13 @@
             document.getElementById("loader-text").innerHTML = text;
         }
 
-        function hideLoader() {
+        function fadeAndHideLoader() {
             const loader = document.getElementById("loader");
             loader.style.opacity = "0";
             setTimeout(() => { 
                 loader.style.display = "none"; 
             }, 300);
         }
-
-        // ============================================================
-        // প্লেয়ার ইভেন্ট – স্মার্ট অটোপ্লে
-        // ============================================================
-        let isPlaying = false;
-
-        // স্ট্রিম প্রস্তুত হলে অটোপ্লে
-        player.on("ready", function() {
-            console.log("📺 Player ready, attempting to play...");
-            // থামা না থাকলে প্লে করুন
-            if (!isPlaying) {
-                player.play();
-            }
-            hideLoader();
-        });
-
-        // প্লে শুরু হলে লোডার লুকান
-        player.on("play", function() {
-            isPlaying = true;
-            hideLoader();
-        });
-
-        // বাফার শুরু হলে লোডার দেখান (শুধু যদি 2 সেকেন্ডের বেশি লাগে)
-        let bufferTimeout;
-        player.on("buffer", function() {
-            clearTimeout(bufferTimeout);
-            bufferTimeout = setTimeout(() => {
-                if (!isPlaying) {
-                    showLoader("⏳ Buffering...");
-                }
-            }, 2000);
-        });
-
-        // বাফার শেষ হলে লোডার লুকান
-        player.on("bufferChange", function(event) {
-            if (event.bufferPercent > 30) {
-                clearTimeout(bufferTimeout);
-                hideLoader();
-            }
-        });
-
-        // প্রথম পজ/প্লে টগল – ইউজার পজ করলে লোডার দেখাব না
-        player.on("pause", function() {
-            clearTimeout(bufferTimeout);
-            hideLoader();
-        });
-
-        // ============================================================
-        // এরর হ্যান্ডলিং
-        // ============================================================
-        player.on("error", function(e) {
-            console.error("❌ Player Error:", e);
-            showLoader(
-                `<span style='color:#ff6b6b;'>⚠️ Stream Error</span><br>
-                <small style='color:#94a3b8;'>${e.message || 'Could not load stream'}</small>`
-            );
-            // পুনরায় চেষ্টা করতে চাইলে:
-            // setTimeout(() => { player.load({ file: streamUrl }); }, 5000);
-        });
-
-        // ============================================================
-        // ফুলস্ক্রিন ও ওরিয়েন্টেশন
-        // ============================================================
-        player.on("fullscreen", function(event) {
-            if (event.fullscreen && screen.orientation && screen.orientation.lock) {
-                screen.orientation.lock("landscape").catch(function(err) {
-                    console.log("Orientation lock ignored:", err);
-                });
-            }
-            // ভিডিও স্ট্রেচিং ঠিক করতে
-            setTimeout(() => {
-                const videoEl = document.querySelector('.jw-video');
-                if (videoEl) {
-                    videoEl.style.setProperty('object-fit', 'fill', 'important');
-                }
-            }, 100);
-        });
-
-        // ============================================================
-        // স্টার্ট – যদি ৫ সেকেন্ডের মধ্যে রেডি না হয়, তবু লোডার দেখান
-        // ============================================================
-        setTimeout(() => {
-            const loader = document.getElementById("loader");
-            if (loader.style.display !== "none") {
-                showLoader("⏳ Still loading...");
-            }
-        }, 5000);
-
-        // ============================================================
-        // ডিবাগ লগ (প্রোডাকশনে কমেন্ট করুন)
-        // ============================================================
-        console.log("🚀 RS Live Player optimized with bufferlength=10, lowLatencyMode=true");
     </script>
 </body>
 </html>
